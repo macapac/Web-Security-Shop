@@ -86,7 +86,7 @@ $var = $_GET['id'];
 <p>&nbsp;</p>
 <!-- Back to shop button -->
 <div style="cursor: pointer;">
-<button class="backtoshop"><center><a style="text-decoration: none; font-weight: 700;letter-spacing:.08em; color: #3a3a3a;" href="shop.php" ><i class="arrow left"></i> Back To Shop</button><center></a>
+<button class="backtoshop"><a style="text-decoration: none; font-weight: 700;letter-spacing:.08em; color: #3a3a3a;" href="shop.php" ><i class="arrow left"></i> Back To Shop</button></a>
 </div>
 
 
