@@ -17,3 +17,22 @@
         <li><b><a href="dashboard.php">HOME</a></b></li>
     </ul>
 </header>
+
+<?php
+// Database configuration
+$host = 'localhost';
+$user = 'root'; // Default username for XAMPP
+$password = ''; // Default password for XAMPP is empty
+$database = 'mysql'; // Replace with your actual database name
+
+// Create a connection
+$con = mysqli_connect($host, $user, $password, $database);
+
+// Check if the connection was successful
+if (!$con) {
+    die("Connection failed: " . mysqli_connect_error());
+} else {
+    echo "<p style='color: green; text-align: center;'>Connected to the database successfully.</p>";
+}
+?>
+
