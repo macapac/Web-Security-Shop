@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<title>AJ-Garments l Login</title>
+<title>AJ-Garments l Login test</title>
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style1.css" />
