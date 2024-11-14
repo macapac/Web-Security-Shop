@@ -4,6 +4,9 @@ session_start();
 <?php
 include 'header.php'; // Include header
 ?>
+<div style="cursor: pointer;" class="content">
+<p><a class="word" href="wallet.php">Your Wallet</a></p></div>
+<div style="font-size: 16px; " class="footer">
 
 <!-- Sign in button + text -->
 <div style="cursor: pointer;" class="content">

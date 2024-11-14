@@ -41,7 +41,7 @@ include 'header.php'; // Include the header
 			$result = mysqli_query($con, $query);
 			while ($row = mysqli_fetch_array($result)) {
 				$price = $row["Price"];
-				$total = $total + ($price * $no_items);
+				$total = ($price * $no_items);
 				?>
 				<!-- Displaying items in the basket -->
 				<div class="w3-row-padding">
@@ -118,7 +118,7 @@ include 'header.php'; // Include the header
 			<div class="summary-total-items"><span class="total-items"></span> Items in your Bag
 				(<?php echo $no_items ?>) </div>
 			<div class="summary-subtotal">
-				<div class="subtotal-title">Subtotal</div>
+				<div class="subtotal-title">Total</div>
 				<div class="subtotal-value final-value" id="basket-subtotal">£ <?php echo $total; ?></div>
 			</div>
 			<form method="post" name="purchase">
