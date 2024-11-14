@@ -107,7 +107,7 @@ include 'header.php'; // Include the header
 		}
 		if ($result) {
 			//re direct user to the checkout page if the purchase is succesful 
-			echo '<script> window.location="checkout.php"; </script> ';
+			echo '<script> window.location="payment.php"; </script> ';
 			//empty basket
 			empty($_SESSION['cart']);
 		}
@@ -119,11 +119,11 @@ include 'header.php'; // Include the header
 				(<?php echo $no_items ?>) </div>
 			<div class="summary-subtotal">
 				<div class="subtotal-title">Total</div>
-				<div class="subtotal-value final-value" id="basket-subtotal">£ <?php echo $total; ?></div>
+				<div class="subtotal-value final-value" id="basket-subtotal">£ <?php echo $ftotal; ?></div>
 			</div>
 			<form method="post" name="purchase">
 				<input type="submit" style="cursor: pointer;" class="checkout-cta summary-checkout" name="submitbutton"
-					value="Checkout" />
+					value="Pay" />
 			</form>
 
 </main>
