@@ -1,5 +1,5 @@
 <?php
-include 'header.php'; // Include header
+include 'header.php'; // Include the header
 ?>
 <!DOCTYPE html>
 <html>

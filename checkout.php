@@ -1,6 +1,9 @@
-<?php 
+<?php
 include("auth_session.php");
+include 'header.php'; // Include the header
 ?>
+
+
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">

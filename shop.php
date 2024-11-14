@@ -1,8 +1,6 @@
-<?php 
-include("auth_session.php");
-?>
 <?php
-include 'header.php'; // Include header
+include("auth_session.php");
+include 'header.php'; // Include the header
 ?>
 
 <body>
@@ -23,56 +21,6 @@ body,h1,h2,h3,h4,h5,h6,p {font-family: "Raleway", sans-serif}
 .w3-sidebar a {font-family: "Roboto", sans-serif}
 body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 </style>
-<!-- Sidebar/menu -->
-<nav class="sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:1;  position:absolute; bottom:10px;  width:200px; margin-top:125px; " id="mySidebar">
-  <div class="w3-container w3-display-container w3-padding-16">
-   <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
-  </div>
- <!-- Filters -->
-<td>
-	<select class="dropdown" >
-	<option selected disabled>Clothing</option>
-	<option onclick="filterSelection('t-shirt')" value="t-shirt">T-shirt</option>
-	<option onclick="filterSelection('hoodie')" value="hoodie">Hoodie</option>
-	<option onclick="filterSelection('sweatshirt')" value="sweatshirt">Sweatshirt</option>
-	<option onclick="filterSelection('jeans')" value="jeans">Jeans</option>
-	<option onclick="filterSelection('accessories')" value="accessories">Accessories</option>
-	</select>
-</td>	
-	<td>
-	<select class="dropdown" >
-    <option selected disabled>Brand</option>
-	<option onclick="filterSelection('bape')" value="Bape">Bape</option>
-	<option onclick="filterSelection('evisu')" value="Evisu">Evisu</option>
-	<option onclick="filterSelection('dior')" value="Dior">Christian Dior</option>
-	<option onclick="filterSelection('chrome')" value="Chrome">Chrome Hearts</option>
-	<option onclick="filterSelection('billionaire boys club')" value="BBC">Billionaire Boys Club</option>
-	<option onclick="filterSelection('prada')" value="prada">Prada</option>
-	<option onclick="filterSelection('Comme Des Garçons')" value="Comme Des Garçons">Comme Des Garçons</option>
-	</select>
-	</td>		
-	<td>
-	<select class="dropdown" >
-	<option selected disabled>Size</option>
-	<option value="Onesize">One-Size</option>
-	<option value="extrasmall">Extra Small</option>
-	<option value="small">Small</option>
-	<option value="medium">Medium</option>
-    <option value="large">Large</option>
-	<option value="extralarge">Extra Large</option>
-	</select>
-    </td>					
-	<td>
-	<select class="dropdown" >
-	<option selected disabled>Price</option>
-	<option value="0-100">£0-£100</option>
-	<option value="100-200">£100-£200</option>
-	<option value="200-300">£200-£300</option>
-	<option value="300-350">£300-£350</option>
-	</select>
-	</td>				
-  </div>
-</nav>
 
 <!-- Top header -->
 <header class="w3-container w3-xlarge">

@@ -1,8 +1,6 @@
-<?php 
-include("auth_session.php");
-?>
 <?php
-include 'header.php'; // Include header
+include("auth_session.php");
+include 'header.php'; // Include the header
 ?>
 
   <main>
@@ -75,10 +73,6 @@ include 'header.php'; // Include header
 		}
 			
 	}
-	//creating different price variables for the price box
-	$tax = round($total *0.05, 2);
-	$delivery = 5;
-	$ftotal = $total + $tax +$delivery;
 	
 	//making sure the decimal places for each price variable is the same
 	$total = number_format($total, 2);
@@ -112,22 +106,7 @@ include 'header.php'; // Include header
         <div class="summary-subtotal">
           <div class="subtotal-title">Subtotal</div>
           <div class="subtotal-value final-value" id="basket-subtotal">£ <?php echo $total ; ?></div>
-        </div>
-        <div class="summary-delivery">
-          <div class="summary-subtotal">
-          <div class="subtotal-title">Delivery</div>
-          <div class="subtotal-value final-value" id="basket-subtotal">£ <?php echo $delivery; ?></div>
-        </div>
-        </div>
-		<div class="summary-subtotal">
-          <div class="subtotal-title">Tax</div>
-          <div class="subtotal-value final-value" id="basket-subtotal">£ <?php echo $tax; ?></div>
-        </div>
-        <div class="summary-total">
-          <div class="total-title">Total</div>
-		  <div class="subtotal-value final-value" id="basket-subtotal">£ <?php echo $ftotal; ?></div>
-        </div>
-		
+        </div>		
 		<form method="post" name="purchase">
         <input type="submit" style="cursor: pointer;" class ="checkout-cta summary-checkout" name="submitbutton" value="Checkout" />
         </form>

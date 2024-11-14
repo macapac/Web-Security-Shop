@@ -1,8 +1,6 @@
 <?php
-	session_start();
-?>
-<?php
-include 'header.php'; // Include header
+include("auth_session.php");
+include 'header.php'; // Include the header
 ?>
 
 <body>
