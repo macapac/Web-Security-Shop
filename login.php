@@ -1,73 +1,62 @@
 <?php
-include 'header.php'; // Include header
+session_start();
+include 'header.php'; // Include the header
+
+require('db.php'); // Include the database connection
+
+// When form submitted, check and create user session
+if (isset($_POST['username'])) {
+    // Escape special characters in username and password to prevent SQL Injection
+    $username = mysqli_real_escape_string($con, $_POST['username']);
+    $password = mysqli_real_escape_string($con, $_POST['password']);
+    
+    // Check if user exists in the database with the correct password
+    $query = "SELECT * FROM `customers` WHERE username='$username' AND password='" . md5($password) . "'";
+    $result = mysqli_query($con, $query);
+
+    switch (mysqli_num_rows($result)) {
+        case 1:
+            $row = mysqli_fetch_array($result);
+            $_SESSION['username'] = $username; // Store username in session
+            $_SESSION['cust_id'] = $row['CustomerID']; // Store customer ID in session
+
+            // Success message and redirection link
+            echo "<div class='form'>
+              <span>Welcome, <b>" . htmlspecialchars($_SESSION['username']) . "</b>!</span>
+                    <h3>Signed In Successfully</h3><br/>
+                    <p class='link'><a href='dashboard.php'>Return To Home</a></p>
+                  </div>";
+            break;
+        default:
+            // Error message for incorrect login
+            echo "<div class='form'>
+                    <h3>Incorrect Username/Password.</h3><br/>
+                    <p class='link'>Click here to <a href='login.php'>Login</a> again.</p>
+                  </div>";
+            break;
+    }
+} else {
 ?>
-<!DOCTYPE html>
-<html>
-<title>AJ-Garments l Login test</title>
-<head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="style1.css" />
-</head>
-<body>
-<!-- Sign in title -->
+
+<!-- Sign In Form -->
 <div class="center">
   <p>SIGN IN</p>
 </div>
-<body>
-
-<?php
-    require('db.php');
-    session_start();
-    // When form submitted, check and create user session.
-    if (isset($_POST['username'])) {
-        $username = $_REQUEST['username'];
-        $username = mysqli_real_escape_string($con, $username);
-        $password = $_REQUEST['password'];
-        $password = mysqli_real_escape_string($con, $password);
-        // Check user is exist in the database
-        $query = "SELECT * FROM `customers` WHERE username='$username'
-                     AND password='" . md5($password) . "'";
-        $result = mysqli_query($con, $query) or die(mysql_error());
-        $rows = mysqli_num_rows($result);
-        if ($rows == 1) {
-			$row = mysqli_fetch_array ($result);
-            $_SESSION['username'] = $username;
-			$_SESSION['cust_id'] = $row["CustomerID"];
-
-            // Redirect to user dashboard page
-			echo "<div class='form'>
-                  <h3>Signed In Successfully</h3><br/>
-                  <p class='link'><a href='dashboard.php'>Return To Home</a></p>
-                  </div>";
-        } else {
-            echo "<div class='form'>
-                  <h3>Incorrect Username/Password.</h3><br/>
-                  <p class='link'>Click here to <a href='login.php'>Login</a> again.</p>
-                  </div>";
-        }
-    } else {
-?>
-<!-- Form for entering username and password, register account button -->
-    <form class="form" method="post" name="login">
+<div class="form">
+    <form method="post" name="login">
         <input type="text" class="login-input" name="username" placeholder="Username" autofocus="true" required />
         <input type="password" class="login-input" name="password" placeholder="Password" required />
         <input type="submit" value="Login" name="submit" class="login-button"/>
         <p class="link"><a href="registration.php">Register Account</a></p>
-		<p>&nbsp;</p>
-  </form>
-
-  <!-- contact button -->
-<button class="helpbutton">
-<script src="https://kit.fontawesome.com/a076d05399.js"></script>
-</head>
-<body>
-<i class="fas fa-question" style="font-size:13px;color: white;"></i>
-	<span><a href="dashboard.php #contact" class="contwor">Contact</a></span>
-</button>
+    </form>
+</div>
 
 <?php
-    }
+}
 ?>
+
+
+
 <style>
 body{
 	line-height:1.5;

@@ -23,7 +23,6 @@ include("auth_session.php");
 <p>&nbsp;</p>
 <p class='link'><a href='dashboard.php'>Homepage</a></p>
 </div>	
-<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 	<!-- End page content -->
 </div>
 <style>
