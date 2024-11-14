@@ -1,3 +1,6 @@
+<?php
+include 'header.php'; // Include header
+?>
 <!DOCTYPE html>
 <html>
 <head>

@@ -1,20 +1,10 @@
 <?php 
 include("auth_session.php");
 ?>
-<!DOCTYPE html>
-<html>
-<body>
-<!-- Navbar (sit on top) -->
-	<ul class="nav">
-	  <li><b><a href="logout.php">LOGOUT</a></b></li>
-	  <li><b><a href="faq.php">FAQ</a></b></li>
-	  <li><b><a href="basket.php">BASKET</a></b></li>
-	  <li><b><a href="account.php">ACCOUNT</a></b></li>
-	  <li><b><a href="shop.php">SHOP</a></b></li>
-	  <li><b><a href="dashboard.php">HOME</a></b></li>
-	  <li><a href="dashboard.php" style="padding:0px;"><img class="header-logo" src="img/logo.png" style="cursor:pointer; float:left; width:25%; padding-top: 3px; padding-bottom: 8px;"> </a> </li>
-	</ul>
-</body>
+<?php
+include 'header.php'; // Include header
+?>
+
 <body>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AJ-Garments l Shop</title>
@@ -123,23 +113,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 ?>
 <!-- End page content -->
 </div>
-<p>&nbsp;</p>
-<!-- Footer -->
-<footer style =" margin: 0; padding: 0; text-align: left; width: 100%; list-style: none; height: 250px; float: left;" class="w3-bottomleft w3-black w10-padding-100">
-<td>
-<!-- Currency dropdown in footer -->
-	<select class="dropdownfoot" >
-	<option value="GBP">GBP £</option>
-	<option value="EUR">EUR €</option>
-	<option value="USD">USD $</option>
-	<option value="CAD">CAD $</option>
-	</select>
-</td>
-  <p><a class="header-logoe">AJ-GARMENTS</a></p>
-    <p><a class="header-logoee">© 2021 </a></p>
-<!-- Payment methods image -->
-	<img src="img/bank.png" style="width:25%" class="imag" >
-</footer>
+
 </body>
 </html>
 <style>

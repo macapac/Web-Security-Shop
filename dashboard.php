@@ -1,33 +1,9 @@
 <?php
 include("auth_session.php");
 ?>
-<!DOCTYPE html>
-<html>
-<title>AJ-Garments l HomePage</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<body>
-<!-- Navbar (sit on top) -->
-<ul class="nav">
-<li><b><a href="logout.php">LOGOUT</a></b></li>
-<li><b><a href="faq.php">FAQ</a></b></li>
-<li><b><a href="basket.php">BASKET</a></b></li>
-<li><b><a href="account.php">ACCOUNT</a></b></li>
-<li><b><a href="shop.php">SHOP</a></b></li>
-<li><b><a href="dashboard.php">HOME</a></b></li>
-<li><a href="dashboard.php" style="padding:0px;"><img class="header-logo"
-src="img/logo.png" style="cursor:pointer; float:left; width:25%;"> </a> </li>
-</ul>
-
-<!-- Header -->
-<header class="w3-display-container " id="home">
-<div class="image-container">
-<span class="helper"></span>
-<img src="img/tewww.jpg" alt="PHOTO">
-<div class="w3-display-middle w3-margin-top w3-center">
-<h1 class="w3-text-white"><span class="w3-black" style="cursor: pointer; font-size: 20px; paddingright: 5px; padding-left: 5px; border-radius: 5px; border: 0.5px solid black; padding: 6px;">
-<!-- View collection button -->
+<?php
+include 'header.php'; // Include header
+?>
 
 <a class="word" href="shop.php" style="padding:5px;" >VIEW COLLECTION</a></span>
 </div>
@@ -147,24 +123,7 @@ echo'<script> window.location="contactmessage.php"; </script> ';
 	<?php
 	}
 	?>
-	<!-- End page content -->
-	</div>
-<!-- Footer -->
-<footer class="w3-bottomleft w3-black w10-padding-100">
-<td>
-<!-- Currency dropdown in footer -->
-<select class="dropdown" >
-<option value="GBP">GBP £</option>
-<option value="EUR">EUR €</option>
-<option value="USD">USD $</option>
-<option value="CAD">CAD $</option>
-</select>
-</td>
- <p><a class="header-logoe">AJ-GARMENTS</a></p>
- <p><a class="header-logoee">© 2021 </a></p>
-<!-- Payment methods image -->
-<img src="img/bank.png" style="width:25%" class="imag" >
-</footer>
+
 </body>
 </html>
 

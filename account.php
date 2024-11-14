@@ -1,29 +1,10 @@
 <?php 
 session_start();
 ?>
-<!DOCTYPE html>
-<html>
-<title>AJ-Garments l Account</title>
-<head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="style1.css" />
-</head>
-<body>
-<!-- Navbar (sit on top) -->
-	<ul class="nav">
-	  <li><b><a href="logout.php">LOGOUT</a></b></li>
-	  <li><b><a href="faq.php">FAQ</a></b></li>
-	  <li><b><a href="basket.php">BASKET</a></b></li>
-	  <li><b><a href="account.php">ACCOUNT</a></b></li>
-	  <li><b><a href="shop.php">SHOP</a></b></li>
-	  <li><b><a href="dashboard.php">HOME</a></b></li>
-	  <li><a href="dashboard.php" style="padding:0px;"><img class="header-logo" src="img/logo.png" style="cursor:pointer; float:left; width:25%;"> </a> </li>
-	</ul>
-</head>
-<!-- Title -->
-<div class="center">
-  <p>ACCOUNT</p>
-</div>
+<?php
+include 'header.php'; // Include header
+?>
+
 <!-- Sign in button + text -->
 <div style="cursor: pointer;" class="content">
 <p><a class="word" href="login.php">SIGN IN</a></p></div>
@@ -38,41 +19,6 @@ session_start();
   <p>&nbsp;</p>
 
 </div>
-
-<!-- contact button -->
-
-<button class="helpbutton">
-<script src="https://kit.fontawesome.com/a076d05399.js"></script>
-</head>
-<body>
-<i class="fas fa-question" style="font-size:13px;color: white;"></i>
-	<span><a href="dashboard.php #contact" class="contwor">Contact</a></span>
-</button>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
-<!-- End page content -->
-</div>
-
-<!-- Footer -->
-<footer style="background-color: black;" class="w3-bottomleft w3-black w10-padding-100">
-
-  <td>
-  <!-- Currency dropdown in footer -->
-	<select class="dropdown" >
-	<option value="GBP">GBP £</option>
-	<option value="EUR">EUR €</option>
-	<option value="USD">USD $</option>
-	<option value="CAD">CAD $</option>
-	</select>
-   </td>
-
-  <p><a class="header-logoe">AJ-GARMENTS</a></p>
-    <p><a class="header-logoee">© 2021 </a></p>
-	<!-- Payment methods image -->
-	<img src="img/bank.png" style="width:25%" class="imag" >
-</footer>
 
 <style>
 .header-logo {

@@ -1,21 +1,10 @@
 <?php
 	session_start();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<title>AJ-Garments l Item</title>
-<body> 
-<!-- Navbar (sit on top) -->
-	<ul class="nav">
-	  <li><b><a href="logout.php">LOGOUT</a></b></li>
-	  <li><b><a href="faq.php">FAQ</a></b></li>
-	  <li><b><a href="basket.php">BASKET</a></b></li>
-	  <li><b><a href="account.php">ACCOUNT</a></b></li>
-	  <li><b><a href="shop.php">SHOP</a></b></li>
-	  <li><b><a href="dashboard.php">HOME</a></b></li>
-	  <li><a href="dashboard.php" style="padding:0px;"><img class="header-logo" src="img/logo.png" style="cursor:pointer; float:left; width:25%;"> </a> </li>
-	</ul>
-</body>
+<?php
+include 'header.php'; // Include header
+?>
+
 <body>
 <html>
 <head>
@@ -170,26 +159,6 @@ magnify("myimage", 3);
 <div style="cursor: pointer;">
 <button class="backtoshop"><center><a style="text-decoration: none; font-weight: 700;letter-spacing:.08em; color: #3a3a3a;" href="shop.php" ><i class="arrow left"></i> Back To Shop</button><center></a>
 </div>
-<p>&nbsp;</p>
-<body>
-<!-- Footer -->
-<footer style="background-color: black; " class="w3-bottomleft w3-black w10-padding-100">
-  <td>
-  <!-- Currency dropdown in footer -->
-	<select class="dropdown" >
-	<option value="GBP">GBP £</option>
-	<option value="EUR">EUR €</option>
-	<option value="USD">USD $</option>
-	<option value="CAD">CAD $</option>
-	</select>
-  </td>
-  <p><a class="header-logoe">AJ-GARMENTS</a></p>
-    <p><a class="header-logoee">© 2021 </a></p>
-	<!-- Payment methods image -->
-	<img src="img/bank.png" style="width:20%" class="imag" >
-</footer>
-
-
 <style>
 .style-quarter{
   padding-left: 20px;

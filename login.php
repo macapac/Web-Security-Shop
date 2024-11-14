@@ -1,3 +1,6 @@
+<?php
+include 'header.php'; // Include header
+?>
 <!DOCTYPE html>
 <html>
 <title>AJ-Garments l Login test</title>
@@ -6,17 +9,6 @@
     <link rel="stylesheet" href="style1.css" />
 </head>
 <body>
-<!-- Navbar (sit on top) -->
-	<ul class="nav">
-    <li><b><a href="logout.php">LOGOUT</a></b></li>
-	<li><b><a href="faq.php">FAQ</a></b></li>
-	<li><b><a href="basket.php">BASKET</a></b></li>
-	<li><b><a href="account.php">ACCOUNT</a></b></li>
-	<li><b><a href="shop.php">SHOP</a></b></li>
-	<li><b><a href="dashboard.php">HOME</a></b></li>
-	<li><a href="dashboard.php" style="padding:0px;"><img class="header-logo" src="img/logo.png" style="padding-top: 3px;
-	padding-bottom: 8px; cursor:pointer; float:left; width:25%;"> </a> </li>
-	</ul>
 <!-- Sign in title -->
 <div class="center">
   <p>SIGN IN</p>
@@ -72,25 +64,7 @@
 <i class="fas fa-question" style="font-size:13px;color: white;"></i>
 	<span><a href="dashboard.php #contact" class="contwor">Contact</a></span>
 </button>
-<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-  <!-- End page content -->
-</div>
-<!-- Footer -->
-<footer class="w3-bottomleft w3-black w10-padding-100">
-  <td>
-  <!-- Currency dropdown in footer -->
-	<select class="dropdown" >
-	<option value="GBP">GBP £</option>
-	<option value="EUR">EUR €</option>
-	<option value="USD">USD $</option>
-	<option value="CAD">CAD $</option>
-</select>
-</td>
-  <p><a class="header-logoe">AJ-GARMENTS</a></p>
-    <p><a class="header-logoee">© 2021 </a></p>
-	<!-- Payment methods image -->
-	<img src="img/bank.png" style="width:20%" class="imag" >
-</footer>
+
 <?php
     }
 ?>
