@@ -11,9 +11,11 @@ include 'header.php'; // Include the header
 
 <?php
 require('db.php');
-$query = "SELECT * FROM Products LIMIT 8 OFFSET 10";
-$result = mysqli_query($con, $query);
-while ($row = mysqli_fetch_array($result)) {
+$stmt = $con->prepare("SELECT * FROM Products LIMIT 8 OFFSET 10");
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
   ?>
   <div style="height:315px; width:270px; " class="table">
     <div class="w3-row-padding">
@@ -43,16 +45,15 @@ while ($row = mysqli_fetch_array($result)) {
   //connect to db using the db script
   require('db.php');
   // When web page form submitted, insert values into the database.
-  if (isset($_REQUEST['name'])) {
-    $name = $_REQUEST['name'];
-    $name = mysqli_real_escape_string($con, $name);
-    $email = $_REQUEST['email'];
-    $email = mysqli_real_escape_string($con, $email);
-    $message = $_REQUEST['message'];
-    $message = mysqli_real_escape_string($con, $message);
-    $insertquery = "INSERT into `contact` (name, email, message)
-VALUES ('$name', '$email', '$message')";
-    $result = mysqli_query($con, $insertquery); //execute the query
+  if (isset($_POST['name'], $_POST['email'], $_POST['message'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $message = $_POST['message'];
+
+    $stmt_insert = $con->prepare("INSERT INTO `contact` (name, email, message) VALUES (?, ?, ?)");
+    $stmt_insert->bind_param("sss", $name, $email, $message);
+    $stmt_insert->execute();
+
     echo '<script> window.location="contactmessage.php"; </script> ';
   } else { ?>
     <p>&nbsp;</p>

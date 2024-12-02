@@ -37,9 +37,13 @@ include 'header.php'; // Include the header
 			$amount = $x["Quantity"];
 			$no_items += $amount;
 			require('db.php');
-			$query = "SELECT * FROM products WHERE ItemName = '$item'";
-			$result = mysqli_query($con, $query);
-			while ($row = mysqli_fetch_array($result)) {
+
+			$stmt = $con->prepare("SELECT * FROM products WHERE ItemName = ?");
+			$stmt->bind_param("s", $item);
+			$stmt->execute();
+			$result = $stmt->get_result();
+
+			while ($row = $result -> fetch_assoc()) {
 				$price = $row["Price"];
 				$total = ($price * $no_items);
 				?>
@@ -96,16 +100,21 @@ include 'header.php'; // Include the header
 	$cust_id = $_SESSION['cust_id'];
 	if (isset($_POST['submitbutton'])) {
 		require('db.php');
-		$query = "INSERT INTO orders (CustomerID, total) VALUES ($cust_id, $ftotal)";
-		$result = mysqli_query($con, $query);
-		$order_id = mysqli_insert_id($con);
+
+		$stmt_order = $con->prepare("INSERT INTO orders (CostumerID, total) VALUES (?, ?)");
+		$stmt_order->bind_param("id", $cust_id, $total);
+		$stmt_order->execute();
+		$order_id = $con->insert_id;
+
 		foreach ($_SESSION['cart'] as $x => $val) {
 			$item_id = $val['ID'];
 			$quantity = $val['Quantity'];
-			$query = "INSERT INTO order_line (OrderID, ItemID, Quantity) VALUES ($order_id, $item_id, $quantity)";
-			$result = mysqli_query($con, $query);
+
+			$stmt_outerline = $con->prepare("INSERT INTO order_line (OrderID, ItemID, Quantity) VALUES (?, ?, ?)");
+			$stmt_outerline->bind_param("iii", $order_id, $item_id, $quantity);
+			$stmt_outerline->execute();
 		}
-		if ($result) {
+		if ($stmt_order && $stmt_outerline) {
 			//re direct user to the checkout page if the purchase is succesful 
 			echo '<script> window.location="payment.php"; </script> ';
 			//empty basket
