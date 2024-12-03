@@ -4,7 +4,16 @@ include 'header.php'; // Include the header
 require('db.php'); // Database connection
 
 // Passing the itemID to this page as a parameter
-$var = $_GET['id'];
+if (isset($_GET['id'])) {
+  $var = $_GET['id'];
+  $stmt->bind_param("s", $var);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $row = $result->fetch_assoc();
+} else {
+  header("Location: shop.php");
+  exit();
+}
 ?>
 
 <body>
@@ -42,12 +51,8 @@ $var = $_GET['id'];
   <div class="w3-row-padding w3-padding-16 w3-center" id="food">
     <div class="style-quarter">
       <h1><?php echo $var; ?></h1>
-      <?php
-      // Fetching item details
-      $query = "SELECT * FROM products WHERE ItemName = '$var'";
-      $result = mysqli_query($con, $query);
-      $row = mysqli_fetch_array($result);
 
+      <?php
       if ($row) {
         $stock = $row["Stock"];
         ?>
