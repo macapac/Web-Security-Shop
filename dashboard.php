@@ -45,10 +45,14 @@ while ($row = $result->fetch_assoc()) {
   //connect to db using the db script
   require('db.php');
   // When web page form submitted, insert values into the database.
-  if (isset($_POST['name'], $_POST['email'], $_POST['message'])) {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $message = $_POST['message'];
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    //this makes only email format can sign to protect from attacks: user@example.com
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      die("Invalid email address");
+    }
+    $message = htmlspecialchars($_POST['message'], ENT_QUOTES, 'UTF-8');
 
     $stmt_insert = $con->prepare("INSERT INTO `contact` (name, email, message) VALUES (?, ?, ?)");
     $stmt_insert->bind_param("sss", $name, $email, $message);

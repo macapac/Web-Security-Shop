@@ -1,5 +1,10 @@
 <?php
 include 'header.php';
+
+//csrf token
+if (!isset($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,15 +22,16 @@ include 'header.php';
 	//connect to db using the db script
     require('db.php');
     // When web page form submitted, insert values into the database.
-    if (isset($_POST['username'], $_POST['password'], $_POST['email'], $_POST['name'], $_POST['address'], $_POST['postcode'], $_POST['countryregion'], $_POST['towncity'])) {
-      $username = $_POST['username'];
-      $password = $_POST['password'];
-      $email = $_POST['email'];
-      $name = $_POST['name'];
-      $address = $_POST['address'];
-      $postcode = $_POST['postcode'];
-      $countryregion = $_POST['countryregion'];
-      $towncity = $_POST['towncity'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
+  
+      $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+      $password = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
+      $email = htmlspecialchars($_POST['email'], FILTER_SANITIZE_EMAIL, 'UTF-8');
+      $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
+      $address = htmlspecialchars($_POST['address'], ENT_QUOTES, 'UTF-8');
+      $postcode = htmlspecialchars($_POST['postcode'], ENT_QUOTES, 'UTF-8');
+      $countryregion = htmlspecialchars($_POST['countryregion'], ENT_QUOTES, 'UTF-8');
+      $towncity = htmlspecialchars($_POST['towncity'], ENT_QUOTES, 'UTF-8');
         
       $stmt_check = $con->prepare("SELECT * FROM customers WHERE username = ?");
       $stmt_check -> bind_param("s", $username);

@@ -6,6 +6,7 @@ require('db.php'); // Database connection
 // Passing the itemID to this page as a parameter
 if (isset($_GET['id'])) {
   $var = $_GET['id'];
+  $stmt = $con->prepare("SELECT * FROM products WHERE ItemName = ?");
   $stmt->bind_param("s", $var);
   $stmt->execute();
   $result = $stmt->get_result();
