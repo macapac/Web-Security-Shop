@@ -38,20 +38,31 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
       <i><a href="basket.php" style="text-decoration: none; font-size: 25px;" class="fa fa-shopping-cart w3-margin-right"></a></i>
     </p>
   </header>
-<?php 
-	require('db.php');
-	$query = "SELECT * FROM products";
-	$result = mysqli_query($con, $query);
+<?php
+
+require('db.php');
+
+$query = "SELECT * FROM products";
+if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
+  $search = "%" . trim($_GET['search']) . "%";
+  $query = "SELECT * FROM products WHERE ItemName LIKE ?";
+    $stmt = $con -> prepare($query);
+    $stmt -> bind_param("s", $search);
+    $stmt -> execute();
+    $result = $stmt -> get_result();
+  } else {
+    $result = $con -> query($query);
+  }
 	while($row = mysqli_fetch_array($result)) {	
 ?>
 <!-- Displaying the items in 3 rows -->
 <div style="height:315px; width:280px; "class="table">
 <div class="w3-row-padding">
 <div style ="text-align: center;" class="w3-display-container">
-<div class="w3-display-bottom w3-white w300-padding"><a href="item.php?id=<?php echo $row["ItemName"]; ?>"><?php echo "<img src='img/".$row['Image']."'height='235' width ='230'>"; ?></a> </div>
-<div><a style="font-size:12px; color:#696969; text-decoration:none; margin-bottom:-15px" href="item.php?id=<?php echo $row["ItemName"]; ?>"><?php echo $row["Brand"]; ?></a></div>
-<div><a style="font-size:14px; color: black; text-decoration:none; " href="item.php?id=<?php echo $row["ItemName"]; ?>"><?php echo $row["ItemName"]; ?></a></div>
-<div style ="text-align: center; margin-top:-15px; padding-bottom:0px; font-size:17px; margin-bottom:0px;" class="w3-display-bottom w3-white w300-padding"><p>£<?php echo $row["Price"]; ?>  </p></div>
+<div class="w3-display-bottom w3-white w300-padding"><a href="item.php?id=<?php echo htmlspecialchars($row["ItemName"], ENT_QUOTES, 'UTF-8'); ?>"><?php echo "<img src='img/" . htmlspecialchars($row['Image'], ENT_QUOTES, 'UTF-8') . "'height='235' width ='230'>"; ?></a> </div>
+<div><a style="font-size:12px; color:#696969; text-decoration:none; margin-bottom:-15px" href="item.php?id=<?php echo htmlspecialchars($row["ItemName"], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($row["Brand"], ENT_QUOTES, 'UTF-8'); ?></a></div>
+<div><a style="font-size:14px; color: black; text-decoration:none; " href="item.php?id=<?php echo htmlspecialchars($row["ItemName"], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($row["ItemName"], ENT_QUOTES, 'UTF-8'); ?></a></div>
+<div style ="text-align: center; margin-top:-15px; padding-bottom:0px; font-size:17px; margin-bottom:0px;" class="w3-display-bottom w3-white w300-padding"><p>£<?php echo htmlspecialchars($row["Price"], ENT_QUOTES, 'UTF-8'); ?>  </p></div>
 </div>
 </div>
 </div>

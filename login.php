@@ -4,12 +4,19 @@ include 'header.php';
 
 require('db.php');
 
+if (!isset($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 if (isset($_POST['username']) && isset($_POST['password'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
 
-    // ------ Changes starting here -------
+  //csrf tokens
+    if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+      die('Invalid CSRF token');
+    }
+
+    $username = htmlspecialchars($_POST['username']);
+    $password = htmlspecialchars($_POST['password']);
 
     $stmt = $con->prepare("SELECT * FROM `customers` WHERE username = ? AND password = ?");
     $hashed_password = hash('sha256', $password);
@@ -48,7 +55,8 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
   <p>SIGN IN</p>
 </div>
 <div class="form">
-    <form method="post" name="login">
+    <form method="post" name="login"> 
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <input type="text" class="login-input" name="username" placeholder="Username" autofocus="true" required />
         <input type="password" class="login-input" name="password" placeholder="Password" required />
         <input type="submit" value="Login" name="submit" class="login-button"/>
