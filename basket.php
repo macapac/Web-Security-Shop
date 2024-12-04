@@ -128,5 +128,4 @@ include 'header.php'; // Include the header
 
 </main>
 </body>
-
 </html>
