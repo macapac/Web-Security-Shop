@@ -22,11 +22,11 @@ if (!isset($_SESSION['csrf_token'])) {
 	//connect to db using the db script
     require('db.php');
     // When web page form submitted, insert values into the database.
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
-  
+    //if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
+    if (isset($_REQUEST['username'])) {
       $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
       $password = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
-      $email = htmlspecialchars($_POST['email'], FILTER_SANITIZE_EMAIL, 'UTF-8');
+      $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
       $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
       $address = htmlspecialchars($_POST['address'], ENT_QUOTES, 'UTF-8');
       $postcode = htmlspecialchars($_POST['postcode'], ENT_QUOTES, 'UTF-8');
@@ -54,10 +54,7 @@ if (!isset($_SESSION['csrf_token'])) {
               <p class='link'>Click here to <a href='login.php'>Login</a></p>
               </div>";
         } else {
-          echo "<div class='form'>
-              <h3>Required fields are missing.</h3><br/>
-              <p class='link'>Click here to <a href='registration.php'>register</a> again.</p>
-              </div>";
+            die("Error inserting data: " . $stmt_insert->error);
         }
       }
     } else {
@@ -65,17 +62,18 @@ if (!isset($_SESSION['csrf_token'])) {
 
 <!-- Registering form -->
     <form class="form" action="" method="post">
-        <input type="text" class="register-input" name="username" placeholder="Username" required />
-		<input type="password" class="register-input" name="password" placeholder="Password" required> 
-        <input type="text" class="register-input" name="email" placeholder="Email Adress" required>
-		<input type="text" class="register-input" name="name" placeholder="Full Name" required />
-		<input type="text" class="register-input" name="address" placeholder="Address" required>
-		<input type="text" class="register-input" name="postcode" placeholder="Postcode" required>
-		<input type="text" class="register-input" name="countryregion" placeholder="Country/Region" required>
-		<input type="text" class="register-input" name="towncity" placeholder="Town/City" required>
-		<input type="submit" name="submit" value="Register" class="register-button">
-		<p class="link"><a href="login.php">Login</a></p>
-		<p style="color: white" class="padding2">.</p>
+      <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+      <input type="text" class="register-input" name="username" placeholder="Username" required />
+      <input type="password" class="register-input" name="password" placeholder="Password" required> 
+      <input type="text" class="register-input" name="email" placeholder="Email Adress" required>
+      <input type="text" class="register-input" name="name" placeholder="Full Name" required />
+      <input type="text" class="register-input" name="address" placeholder="Address" required>
+      <input type="text" class="register-input" name="postcode" placeholder="Postcode" required>
+      <input type="text" class="register-input" name="countryregion" placeholder="Country/Region" required>
+      <input type="text" class="register-input" name="towncity" placeholder="Town/City" required>
+      <input type="submit" name="submit" value="Register" class="register-button">
+      <p class="link"><a href="login.php">Login</a></p>
+      <p style="color: white" class="padding2">.</p>
     </form>
 <?php
     }
