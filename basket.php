@@ -15,8 +15,17 @@ include 'header.php'; // Include the header
 	//hides errors
 	error_reporting(0);
 	//removing items from the basket
-	if (isset($_GET['remove']) && (!empty($_GET['remove'] || $_GET['remove'] == 0))) {
-		unset($_SESSION['cart'][$_GET['remove']]);
+
+	//Adding here CSRF protection:
+	if (!isset($_SESSION['csrf_token'])) {
+		$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+	}
+
+	if (isset($_GET['remove'])) {
+		$remove = filter_var($_GET['remove'], FILTER_SANITIZE_STRING);
+		if (!empty($remove)) {
+			unset($_SESSION['cart'][$remove]);
+		}
 	}
 	if (empty($_SESSION['cart'])) {
 		//if cart is empty display the prices as 0
@@ -24,10 +33,10 @@ include 'header.php'; // Include the header
 		$amount = 0;
 		$no_items = 0;
 		echo "<div class='messa'>
-                  <h2>Your Basket Is Currently Empty</h2>
-				  <p>&nbsp;</p>
-				  <p>&nbsp;</p>
-                  </div>";
+               <h2>Your Basket Is Currently Empty</h2>
+			  		<p>&nbsp;</p>
+			  		<p>&nbsp;</p>
+            </div>";
 	} else {
 		//if not empty, intialising variables
 		$total = 0;
@@ -37,9 +46,13 @@ include 'header.php'; // Include the header
 			$amount = $x["Quantity"];
 			$no_items += $amount;
 			require('db.php');
-			$query = "SELECT * FROM products WHERE ItemName = '$item'";
-			$result = mysqli_query($con, $query);
-			while ($row = mysqli_fetch_array($result)) {
+
+			$stmt = $con->prepare("SELECT * FROM products WHERE ItemName = ?");
+			$stmt->bind_param("s", $item);
+			$stmt->execute();
+			$result = $stmt->get_result();
+
+			while ($row = $result -> fetch_assoc()) {
 				$price = $row["Price"];
 				$total = ($price * $no_items);
 				?>
@@ -52,7 +65,7 @@ include 'header.php'; // Include the header
 									<div class="product-image">
 										<!-- Displaying item image -->
 										<div style="display: inline-block" class="pic">
-											<?php echo "<img src='img/" . $row['Image'] . "' id='myimage'  height='210' width ='220'>"; ?>
+											<?php echo "<img src='img/" . htmlspecialchars($row['Image'], ENT_QUOTES, 'UTF-8') . "' id='myimage'  height='210' width ='220'>"; ?>
 										</div>
 									</div>
 								</div>
@@ -60,11 +73,11 @@ include 'header.php'; // Include the header
 									<div class="product-details item-quantity">
 										<!-- Displaying item name -->
 										<div class="w3-display-bottom w3-white w3-padding">
-											<p><?php echo $row["ItemName"]; ?> </p>
+											<p><?php echo htmlspecialchars($row["ItemName"], ENT_QUOTES, 'UTF-8'); ?> </p>
 										</div>
 										<!-- Displaying item size -->
 										<div class="w3-display-bottom w3-white w3-padding">
-											<p>Size <?php echo $row["Size"]; ?> </p>
+											<p>Size <?php echo htmlspecialchars($row["Size"], ENT_QUOTES, 'UTF-8'); ?> </p>
 										</div>
 										<!-- Displaying quantity -->
 										<?php echo "<strong><div class='qua product-details'> <p>Quantity :</p>$amount</div></strong>"; ?>
@@ -74,7 +87,7 @@ include 'header.php'; // Include the header
 										<?php echo '<div><a class="remov" href="?remove=' . $item . '">Remove</a></div>'; ?>
 									</div>
 									<div style="margin-left: 125px;" class="price">
-										<p>£ <?php echo $row["Price"] * $amount; ?> </p>
+										<p>£ <?php echo htmlspecialchars($row["Price"] * $amount, ENT_QUOTES, 'UTF-8'); ?> </p>
 									</div>
 								</strong>
 							</div>
@@ -96,16 +109,21 @@ include 'header.php'; // Include the header
 	$cust_id = $_SESSION['cust_id'];
 	if (isset($_POST['submitbutton'])) {
 		require('db.php');
-		$query = "INSERT INTO orders (CustomerID, total) VALUES ($cust_id, $ftotal)";
-		$result = mysqli_query($con, $query);
-		$order_id = mysqli_insert_id($con);
+
+		$stmt_order = $con->prepare("INSERT INTO orders (CostumerID, total) VALUES (?, ?)");
+		$stmt_order->bind_param("id", $cust_id, $total);
+		$stmt_order->execute();
+		$order_id = $con->insert_id;
+
 		foreach ($_SESSION['cart'] as $x => $val) {
 			$item_id = $val['ID'];
 			$quantity = $val['Quantity'];
-			$query = "INSERT INTO order_line (OrderID, ItemID, Quantity) VALUES ($order_id, $item_id, $quantity)";
-			$result = mysqli_query($con, $query);
+
+			$stmt_outerline = $con->prepare("INSERT INTO order_line (OrderID, ItemID, Quantity) VALUES (?, ?, ?)");
+			$stmt_outerline->bind_param("iii", $order_id, $item_id, $quantity);
+			$stmt_outerline->execute();
 		}
-		if ($result) {
+		if ($stmt_order && $stmt_outerline) {
 			//re direct user to the checkout page if the purchase is succesful 
 			echo '<script> window.location="payment.php"; </script> ';
 			//empty basket

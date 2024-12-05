@@ -1,5 +1,10 @@
 <?php
-include 'header.php'; // Include the header
+include 'header.php';
+
+//csrf token
+if (!isset($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,57 +22,44 @@ include 'header.php'; // Include the header
 	//connect to db using the db script
     require('db.php');
     // When web page form submitted, insert values into the database.
-    if (isset($_REQUEST['username'])) {		//checks if username has been filled in
-        $username = $_REQUEST['username'];
-        //escapes special characters in a string
-        $username = mysqli_real_escape_string($con, $username);
-		
-        $email    = $_REQUEST['email'];
-        $email    = mysqli_real_escape_string($con, $email);
-		
-        $password = $_REQUEST['password'];
-        $password = mysqli_real_escape_string($con, $password);
-		
-		$name = $_REQUEST['name'];
-        $name = mysqli_real_escape_string($con, $name);
-		
-		$address  = $_REQUEST['address'];
-        $address  = mysqli_real_escape_string($con, $address);
-		
-		$postcode = $_REQUEST['postcode'];
-        $postcode = mysqli_real_escape_string($con, $postcode);
-		
-		$countryregion = $_REQUEST['countryregion'];
-        $countryregion = mysqli_real_escape_string($con, $countryregion);
-		
-		$towncity = $_REQUEST['towncity'];
-        $towncity = mysqli_real_escape_string($con, $towncity);
-		//check if username already exists
-		$checkquery = "SELECT * FROM customers WHERE username = '$username'";
-		$result1 = mysqli_query($con, $checkquery);		//execute the query
-		if (mysqli_num_rows($result1) > 0){
-			echo "<div class='form'>
-                  <h3>Username already exists</h3><br/>
-                  <p class='link'>Click here to <a href='registration.php'>register</a> again.</p>
-                  </div>";
-		}else{
-		//if username doesnt exist then add to DB
-			$insertquery    = "INSERT into `customers` (username, password, email, name, address, postcode, countryregion, towncity)
-						 VALUES ('$username', '" . md5($password) . "', '$email', '$name', '$address', '$postcode', '$countryregion', '$towncity')";
-			//.md5 is a function which hashes the password
-			$result   = mysqli_query($con, $insertquery);	//execute the query
-			if ($result) {		//checking if query executed
-				echo "<div class='form'>
-					  <h3>You are registered successfully.</h3><br/>
-					  <p class='link'>Click here to <a href='login.php'>Login</a></p>
-					  </div>";
-			} else {
-				echo "<div class='form'>
-					  <h3>Required fields are missing.</h3><br/>
-					  <p class='link'>Click here to <a href='registration.php'>register</a> again.</p>
-					  </div>";
-			}
-		}
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
+  
+      $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+      $password = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
+      $email = htmlspecialchars($_POST['email'], FILTER_SANITIZE_EMAIL, 'UTF-8');
+      $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
+      $address = htmlspecialchars($_POST['address'], ENT_QUOTES, 'UTF-8');
+      $postcode = htmlspecialchars($_POST['postcode'], ENT_QUOTES, 'UTF-8');
+      $countryregion = htmlspecialchars($_POST['countryregion'], ENT_QUOTES, 'UTF-8');
+      $towncity = htmlspecialchars($_POST['towncity'], ENT_QUOTES, 'UTF-8');
+        
+      $stmt_check = $con->prepare("SELECT * FROM customers WHERE username = ?");
+      $stmt_check -> bind_param("s", $username);
+      $stmt_check->execute();
+      $result_check = $stmt_check -> get_result();
+
+      if ($result_check->num_rows > 0){
+        echo "<div class='form'>
+                    <h3>Username already exists</h3><br/>
+                    <p class='link'>Click here to <a href='registration.php'>register</a> again.</p>
+                    </div>";
+      } else {
+        $stmt_insert = $con->prepare("INSERT INTO `customers` (username, password, email, name, address, postcode, countryregion, towncity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $hashed_password = hash('sha256', $password);
+        $stmt_insert->bind_param("ssssssss", $username, $hashed_password, $email, $name, $address, $postcode, $countryregion, $towncity);
+        
+        if ($stmt_insert->execute()) {		
+          echo "<div class='form'>
+              <h3>You are registered successfully.</h3><br/>
+              <p class='link'>Click here to <a href='login.php'>Login</a></p>
+              </div>";
+        } else {
+          echo "<div class='form'>
+              <h3>Required fields are missing.</h3><br/>
+              <p class='link'>Click here to <a href='registration.php'>register</a> again.</p>
+              </div>";
+        }
+      }
     } else {
 ?>
 

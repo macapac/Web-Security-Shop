@@ -1,22 +1,34 @@
 <?php
 session_start();
-include 'header.php'; // Include the header
+include 'header.php';
 
-require('db.php'); // Include the database connection
+require('db.php');
 
-// When form submitted, check and create user session
-if (isset($_POST['username'])) {
-    // Escape special characters in username and password to prevent SQL Injection
-    $username = mysqli_real_escape_string($con, $_POST['username']);
-    $password = mysqli_real_escape_string($con, $_POST['password']);
-    
-    // Check if user exists in the database with the correct password
-    $query = "SELECT * FROM `customers` WHERE username='$username' AND password='" . md5($password) . "'";
-    $result = mysqli_query($con, $query);
+if (!isset($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+if (isset($_POST['username']) && isset($_POST['password'])) {
+
+  //csrf tokens
+    if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+      die('Invalid CSRF token');
+    }
+
+    $username = htmlspecialchars($_POST['username']);
+    $password = htmlspecialchars($_POST['password']);
+
+    $stmt = $con->prepare("SELECT * FROM `customers` WHERE username = ? AND password = ?");
+    $hashed_password = hash('sha256', $password);
+
+    $stmt->bind_param("ss", $username, $hashed_password);
+    $stmt-> execute();
+
+    $result = $stmt -> get_result();
 
     switch (mysqli_num_rows($result)) {
         case 1:
-            $row = mysqli_fetch_array($result);
+            $row = $result->fetch_assoc();
             $_SESSION['username'] = $username; // Store username in session
             $_SESSION['cust_id'] = $row['CustomerID']; // Store customer ID in session
 
@@ -43,7 +55,8 @@ if (isset($_POST['username'])) {
   <p>SIGN IN</p>
 </div>
 <div class="form">
-    <form method="post" name="login">
+    <form method="post" name="login"> 
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <input type="text" class="login-input" name="username" placeholder="Username" autofocus="true" required />
         <input type="password" class="login-input" name="password" placeholder="Password" required />
         <input type="submit" value="Login" name="submit" class="login-button"/>

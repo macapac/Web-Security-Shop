@@ -11,9 +11,11 @@ include 'header.php'; // Include the header
 
 <?php
 require('db.php');
-$query = "SELECT * FROM Products LIMIT 8 OFFSET 10";
-$result = mysqli_query($con, $query);
-while ($row = mysqli_fetch_array($result)) {
+$stmt = $con->prepare("SELECT * FROM Products LIMIT 8 OFFSET 10");
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
   ?>
   <div style="height:315px; width:270px; " class="table">
     <div class="w3-row-padding">
@@ -43,16 +45,19 @@ while ($row = mysqli_fetch_array($result)) {
   //connect to db using the db script
   require('db.php');
   // When web page form submitted, insert values into the database.
-  if (isset($_REQUEST['name'])) {
-    $name = $_REQUEST['name'];
-    $name = mysqli_real_escape_string($con, $name);
-    $email = $_REQUEST['email'];
-    $email = mysqli_real_escape_string($con, $email);
-    $message = $_REQUEST['message'];
-    $message = mysqli_real_escape_string($con, $message);
-    $insertquery = "INSERT into `contact` (name, email, message)
-VALUES ('$name', '$email', '$message')";
-    $result = mysqli_query($con, $insertquery); //execute the query
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    //this makes only email format can sign to protect from attacks: user@example.com
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      die("Invalid email address");
+    }
+    $message = htmlspecialchars($_POST['message'], ENT_QUOTES, 'UTF-8');
+
+    $stmt_insert = $con->prepare("INSERT INTO `contact` (name, email, message) VALUES (?, ?, ?)");
+    $stmt_insert->bind_param("sss", $name, $email, $message);
+    $stmt_insert->execute();
+
     echo '<script> window.location="contactmessage.php"; </script> ';
   } else { ?>
     <p>&nbsp;</p>
