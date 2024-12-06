@@ -6,7 +6,7 @@ include 'header.php'; // Include the header
 <!-- Featured items -->
 <div class="w3-container" id="featured items">
   <h3 class="w3-border-bottom w3-border-light-grey w3-padding-15" style="text-align: center; fontfamily: sans-serif;">
-    Featured Items</h3>
+    Test Featured Items</h3>
 </div>
 
 <?php
