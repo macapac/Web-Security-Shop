@@ -1,7 +1,6 @@
 <?php
 session_start();
 include 'header.php';
-
 require('db.php');
 
 if (!isset($_SESSION['csrf_token'])) {
@@ -63,7 +62,6 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
         <p class="link"><a href="registration.php">Register Account</a></p>
     </form>
 </div>
-
 <?php
 }
 ?>

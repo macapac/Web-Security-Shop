@@ -75,6 +75,7 @@ if (!isset($_SESSION['csrf_token'])) {
       <p class="link"><a href="login.php">Login</a></p>
       <p style="color: white" class="padding2">.</p>
     </form>
+
 <?php
     }
 ?>

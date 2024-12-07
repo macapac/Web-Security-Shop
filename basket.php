@@ -146,5 +146,7 @@ include 'header.php'; // Include the header
 
 </main>
 </body>
-
+<?php
+include 'footer.php'; // Include the footer
+?>
 </html>

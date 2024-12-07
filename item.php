@@ -19,7 +19,6 @@ if (isset($_GET['id'])) {
 
 <body>
   <html>
-
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -155,5 +154,7 @@ if (isset($_GET['id'])) {
       }
     </script>
 </body>
-
+<?php
+include 'footer.php'; // Include the footer
+?>
 </html>

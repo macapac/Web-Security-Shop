@@ -22,7 +22,6 @@ include 'header.php'; // Include header
   <p>&nbsp;</p>
 
 </div>
-
 <style>
 .header-logo {
     padding-top: 3px;
@@ -41,7 +40,7 @@ include 'header.php'; // Include header
 }
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial;
   line-height: 1.5;
 }
 .footer {
@@ -96,7 +95,7 @@ body {
 	color: white;
 	display: inline-block;
 	font-size: 15px;
-	font-family: sans-serif;
+	font-family: Arial;
 	text-decoration: none;
 }
 .content {
@@ -123,7 +122,7 @@ ol {
   padding-left: 10px;
   background-color: white;
   margin: auto;
-  font-family: verdana;
+  font-family: Arial;
   font-weight: 400;
   font-size: 14px;
   line-height: 1.5;

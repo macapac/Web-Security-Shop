@@ -75,6 +75,7 @@ if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
 
 </body>
 </html>
+
 <style>
 .w300-padding{
 	padding:0px;

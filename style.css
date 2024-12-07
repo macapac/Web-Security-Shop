@@ -37,7 +37,7 @@ body{
 	margin-top: -50px;
 }
 .styling {
-    font-family: sans-serif;
+  font-family: sans-serif;
 	font-size: 17px;
 	font-weight: 400;
 	line-height: 1.5;
@@ -121,10 +121,10 @@ body{
 }
 #logo{
 	padding-top: 3px;
-	padding-bottom: 8px;
+	padding-bottom: 3px;
 	cursor:pointer;
 	float:left;
-	width:25%;
+	width:15%;
 }
 .dropbtn {
   background-color: #4CAF50;
