@@ -14,7 +14,7 @@
             <li><a href="shop.php">Shop</a></li>
             <li><a href="account.php">Account</a></li>
             <li><a href="basket.php">Basket</a></li>
-            <li><a href="logout.php">Logout</a></li>
+            <li><a href="Wallet.php">Wallet</a></li>
         </ul>
     </div>
 </header>
@@ -31,12 +31,6 @@ $database = 'mysql'; // Replace with your actual database name
 // Create a connection
 $con = mysqli_connect($host, $user, $password, $database);
 
-// Check if the connection was successful
-if (!$con) {
-    die("Connection failed: " . mysqli_connect_error());
-} else {
-    echo "<p style='color: green; text-align: center;'>Connected to the database successfully.</p>";
-}
 ?>
 
 <style>

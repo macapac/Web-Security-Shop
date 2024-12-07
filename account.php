@@ -1,162 +1,163 @@
 <?php 
 session_start();
-?>
-<?php
 include 'header.php'; // Include header
+$username = $_SESSION['username'] ?? 'Guest'; // Default to 'Guest' if not set
 ?>
-<div style="cursor: pointer;" class="content">
-<p><a class="word" href="wallet.php">Your Wallet</a></p></div>
-<div style="font-size: 16px; " class="footer">
 
-<!-- Sign in button + text -->
-<div style="cursor: pointer;" class="content">
-<p><a class="word" href="login.php">SIGN IN</a></p></div>
-<div style="font-size: 16px; " class="footer">
-<p>You must be signed in your account to access the shop and to be able to purchase items.<p></div>
-<!-- Create account button + text -->
-<div style="cursor: pointer;" class="content">
-<p><a  class="word" href="registration.php">CREATE ACCOUNT</a></p>
+<div class="container">
+  <div class="avatar-flip">
+    <img src="img/user.webp" height="150" width="150">
+    <img src="img/user.webp" height="150" width="150">
+  </div>
+  <h2><?php echo htmlspecialchars($username); ?></h2>
+  <h4>Account</h4>
+  <div class="button-container"><a href="wallet.php">Your wallet</a></div>
+  <div class="button-container"><a href="logout.php">Logout</a></div>
 </div>
-<div style="font-size: 16px; " class="footer">
-  <p><a class="mini">New to AJ-Garments? Register an account with AJ-Garments today. Why create an account with us? Be the first in line to recieve special discounts and notified about exclusive sales in just a few taps. Creating an account is free! Create your account now by clicking option above.</a> </p>
-  <p>&nbsp;</p>
 
-</div>
+
+
+
 <style>
-.header-logo {
-    padding-top: 3px;
-	padding-bottom: 8px;
-}
-.nav li {
-  display: inline-block;
-  font-size: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-color: #f4f4f4;
-  letter-spacing: 0.5px;
-}
-* {
-  box-sizing: border-box;
-}
+@import url(https://fonts.googleapis.com/css?family=Roboto:900,300);
 body {
-  margin: 0;
-  font-family: Arial;
-  line-height: 1.5;
+  background-color: #f0f0f0;
+  font-family: roboto;
 }
-.footer {
-  background-color: white;
-  width: 750px;
-}
-.dropdown {
-  position: relative;
-  display: inline-block;
-  margin: 20px;
-  padding: 5px 10px;
-}
-.header-logoe {
-	color: white;
-	display: inline-block;
-	font-size: 25px;
-	padding-left: 20px;
-	padding-top: 70px;
-	background-color: black;
-	text-decoration: none;
-	font-family: arial;
-
-}
-.header-logoee {
-	color: white;
-	display: inline-block;
-	font-size: 10px;
-	padding-bottom: 0px;
-	padding-top: 0px;
-	padding-left: 20px;
-	background-color: black;
-	float: left;
-	text-decoration: none;
-	font-family: arial;
-}	
-.word {
-	color: white;
-	display: inline-block;
-	font-size: 30px;
-	text-decoration: none;
-	text-align: center;
-	letter-spacing: 2px;
-}
-.imag {
-  display: block;
-  margin-left: auto;
-  padding-top: 0px;
-  padding-left: 60px;
-  padding-right: 0px;
-}
-.contwor {
-	color: white;
-	display: inline-block;
-	font-size: 15px;
-	font-family: Arial;
-	text-decoration: none;
-}
-.content {
-  background-color: black;
-  width:  750px;
-  padding: 5px 15px;
+.container {
+  width: 400px;
+  margin: 20px auto 120px;
+  background-color: #fff;
+  padding: 0 20px 20px;
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.075);
+  -webkit-box-shadow: 0 2px 5px rgba(0,0,0,0.075);
+  -moz-box-shadow: 0 2px 5px rgba(0,0,0,0.075);
   text-align: center;
-  margin-top: 30px;
 }
-ul {
-  list-style-type: none;
-  text-align: center;
-  margin: 0;
-  padding: 0;
+.container:hover .avatar-flip {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+}
+.container:hover .avatar-flip img:first-child {
+  opacity: 0;
+}
+.container:hover .avatar-flip img:last-child {
+  opacity: 1;
+}
+.avatar-flip {
+  border-radius: 100px;
   overflow: hidden;
-  border: 1px #f4f4f4;
-  background-color: #f4f4f4;
-}
-ol {
-  width: 650px;
-  padding-top: 10px;
-  padding-right: 135px;
-  padding-bottom: 10px;
-  padding-left: 10px;
-  background-color: white;
+  height: 150px;
+  width: 150px;
+  position: relative;
   margin: auto;
-  font-family: Arial;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 1.5;
+  top: -10px; /* Reduced from -60px to -30px to decrease the gap */
+  transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 0 13px #f0f0f0;
+  -webkit-box-shadow: 0 0 0 13px #f0f0f0;
+  -moz-box-shadow: 0 0 0 13px #f0f0f0;
 }
-li {
-  float: right;
-  
+.avatar-flip img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 100px;
+  transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
 }
-li a {
-  display: block;
-  color: black;
+.avatar-flip img:first-child {
+  z-index: 1;
+}
+.avatar-flip img:last-child {
+  z-index: 0;
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  opacity: 0;
+}
+h2 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #333;
+}
+h4 {
+  font-size: 13px;
+  color: #00baff;
+  letter-spacing: 1px;
+  margin-bottom: 25px
+}
+p {
+  font-size: 16px;
+  line-height: 26px;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+
+.button-container a {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 5px 0; /* Spacing between buttons */
+  background-color: #007BFF; /* A nice blue shade for button background */
+  color: #ffffff; /* White text */
+  border-radius: 5px; /* Rounded corners */
+  text-decoration: none; /* Remove underline from links */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+}
+
+.button-container a:hover {
+  background-color: #0056b3; /* Darker shade of blue on hover */
+  color: #ffffff; /* Maintain white text on hover */
+}
+
+.container {
+  width: 400px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.075);
   text-align: center;
-  padding: 8px 25px;
-  text-decoration: none;
-  background-color: rgba(244, 244, 244, 1);
-  font-family: arial;
-  font-weight: 0;
-  font-size: 12px;
 }
-div{
-  padding-top: 10px;
-  padding-right: 5px;
-  padding-left: 5px;
-  background-color: black;
+
+.avatar-flip {
+  border-radius: 100px;
+  overflow: hidden;
+  height: 150px;
+  width: 150px;
+  position: relative;
   margin: auto;
-  font-size: 14px;
-  line-height: 1.5;
-  font-family: arial;
+  top: -10px;
+  box-shadow: 0 0 0 13px #f0f0f0;
 }
-.center {
-  background-color: white;
-  text-align: center;
-  font-size: 2.75em;
-  font-family: Arial;
-  margin-bottom: 50px;
+
+.avatar-flip img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 100px;
 }
+
+h2, h4, p {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+h4 {
+  color: #00baff;
+  letter-spacing: 1px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 26px;
+  color: #666;
+}
+
 </style>
