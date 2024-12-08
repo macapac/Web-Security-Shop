@@ -1,0 +1,207 @@
+[33mcommit 6e997fc338092cf476fd9f677fbe066c12cb1a0f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Sun Dec 8 17:56:29 2024 +0100
+
+    .
+
+[33mcommit c91552d6f50f2608bf667579d59d58251a6292dd[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Sun Dec 8 17:53:53 2024 +0100
+
+    test
+
+[33mcommit f3113185d7e2afa88a696f723c6f12831d94e42f[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Sat Dec 7 02:29:52 2024 +0100
+
+    changes
+
+[33mcommit cfbae6bfd2ba807e42631459741477938fab60cf[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Sat Dec 7 01:22:25 2024 +0100
+
+    style
+
+[33mcommit 87c1dd601e4d7a82d00d5b043332010a3dec6a6f[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Fri Dec 6 23:54:00 2024 +0100
+
+    test
+
+[33mcommit c1909e7e94d6e05be511762efe84616b189465e9[m
+Merge: 35cc6f7 9f80af6
+Author: Max Froggatt <116274825+macapac@users.noreply.github.com>
+Date:   Fri Dec 6 00:26:53 2024 +0100
+
+    Merge pull request #5 from macapac/hassan
+    
+    Hassan
+
+[33mcommit 9f80af6c379d953915936875f813589244457ef5[m
+Merge: 1da9a7f 0ffb131
+Author: Max Froggatt <116274825+macapac@users.noreply.github.com>
+Date:   Fri Dec 6 00:26:01 2024 +0100
+
+    Merge pull request #4 from hKouja/hassan
+    
+    fixed registration problem
+
+[33mcommit 0ffb131bce68f78c68a61bab1ac1ce03255546f6[m
+Author: hKouja <ha5462al-s@student.lu.se>
+Date:   Thu Dec 5 14:55:36 2024 +0100
+
+    fixed registration problem
+
+[33mcommit 35cc6f7d832f34640b681e320fc70f863605d343[m
+Merge: 3e31667 1da9a7f
+Author: Max Froggatt <116274825+macapac@users.noreply.github.com>
+Date:   Thu Dec 5 12:41:19 2024 +0100
+
+    Merge pull request #3 from macapac/hassan
+    
+    Hassan
+
+[33mcommit 1da9a7f1396616e90b4558e7c13b37bd1440c1b5[m
+Merge: 2a5db42 2060cf9
+Author: Max Froggatt <116274825+macapac@users.noreply.github.com>
+Date:   Wed Dec 4 23:24:38 2024 +0100
+
+    Merge pull request #2 from hKouja/hassan
+    
+    updated code for XSS + CSRF protection
+
+[33mcommit 2060cf902d2205845fcb4453591eb309f481bb48[m
+Author: hKouja <ha5462al-s@student.lu.se>
+Date:   Wed Dec 4 21:43:52 2024 +0100
+
+    updated code for XSS + CSRF protection
+
+[33mcommit 2a5db4239de77ce1941d1cac388305d48db32882[m
+Merge: 3e31667 fefd0c7
+Author: Max Froggatt <116274825+macapac@users.noreply.github.com>
+Date:   Wed Dec 4 00:56:21 2024 +0100
+
+    Merge pull request #1 from hKouja/hassan
+    
+    Hassan
+
+[33mcommit fefd0c72b45b6d1656254efbaee7efef606c468e[m
+Author: hKouja <ha5462al-s@student.lu.se>
+Date:   Mon Dec 2 18:57:12 2024 +0100
+
+    replaced query to prepared statement in item.php
+
+[33mcommit 2fd1fdf79cd9c547b2db55d1051fab4537a95311[m
+Author: hKouja <ha5462al-s@student.lu.se>
+Date:   Mon Dec 2 18:20:11 2024 +0100
+
+    replaced query to prepared statement in basket and dashboard
+
+[33mcommit b052accddf845fffdff8195839a40561ef8906e5[m
+Author: hKouja <ha5462al-s@student.lu.se>
+Date:   Mon Dec 2 17:30:34 2024 +0100
+
+    replaced SQL query with prepared statement, also changed from md5 to sha256 for hashing passwords
+
+[33mcommit 3e3166702f8c3116c1fa105f182cb0bca401aef5[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 16:34:13 2024 +0100
+
+    .
+
+[33mcommit f40a5d80cd366f1abf255c158982663c81ab5aee[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 16:33:48 2024 +0100
+
+    .
+
+[33mcommit eea5eb165a683530df0f49ef34b66f01962e3f2d[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 15:31:45 2024 +0100
+
+    fixed basket
+
+[33mcommit 295266ea7020d34a115b180ecda311b84855d869[m
+Merge: 346f250 36bf8fc
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 14:17:34 2024 +0100
+
+    Merge branch 'main' of https://github.com/macapac/ajshop
+
+[33mcommit 346f2506fd451d073ce3b877a381d563acc42eea[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 14:17:32 2024 +0100
+
+    changes
+
+[33mcommit 36bf8fc4e9a1fe8bbf358824ccf8abdcd160638e[m
+Author: Max Froggatt <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 13:37:12 2024 +0100
+
+    Update README.md
+
+[33mcommit 994a5ff9038c231f2287401e9d3cb1fe8641a1c8[m
+Author: Max Froggatt <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 13:36:44 2024 +0100
+
+    Create README.md
+
+[33mcommit 8cb54c45faeb06cf136ae18dea6422f43bcfbc2a[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 13:36:04 2024 +0100
+
+    .
+
+[33mcommit 3b8b8c780ae281950a28fed47c52a9d8580ccaf1[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 13:35:55 2024 +0100
+
+    changes
+
+[33mcommit 0395ff6e0b7b5c3633d2524fd37fc54ed903099f[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 12:03:04 2024 +0100
+
+    changes
+
+[33mcommit 7c41bc57ea7c228549d7f32ea126e3962c6c767a[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 11:45:36 2024 +0100
+
+    changes
+
+[33mcommit 02a91e8e5bbe22c484a2b7624accd13f4d215935[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 10:46:47 2024 +0100
+
+    changes
+
+[33mcommit 8766abe43c267908c28887d52b495f0ce8f5e2b6[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 10:02:53 2024 +0100
+
+    test
+
+[33mcommit 7756db3e84491bab5137b122ef079656fd06f02e[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 14 09:32:39 2024 +0100
+
+    .
+
+[33mcommit 1743f6748c4c77d9b4b0d1b8f0ad1ef571637fd6[m
+Author: Max F <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 7 11:43:54 2024 +0100
+
+    database
+
+[33mcommit 34f1e893f15db2dc3acda80a0210ef09d7f031a8[m
+Author: Max Froggatt <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 7 11:41:50 2024 +0100
+
+    Add files via upload
+
+[33mcommit 7b1276c0debc0da70d92fb7c038b2adde9c663e0[m
+Author: Max Froggatt <116274825+macapac@users.noreply.github.com>
+Date:   Thu Nov 7 11:37:29 2024 +0100
+
+    Add files via upload
