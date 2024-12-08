@@ -12,9 +12,9 @@
         <ul class="nav">
             <li><a href="dashboard.php">Home</a></li>
             <li><a href="shop.php">Shop</a></li>
-            <li><a href="account.php">Account</a></li>
             <li><a href="basket.php">Basket</a></li>
             <li><a href="Wallet.php">Wallet</a></li>
+            <li><a href="account.php">Account</a></li>
         </ul>
     </div>
 </header>
@@ -57,7 +57,7 @@ $con = mysqli_connect($host, $user, $password, $database);
 }
 
 .navbar .logo {
-    width: 90px; /* Ensures the logo is not too large */
+    width: 70px; /* Ensures the logo is not too large */
     height: auto;
     display: block;
 }
