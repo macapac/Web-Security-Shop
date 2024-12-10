@@ -7,76 +7,85 @@ if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Check if the form was submitted by checking if 'submit' button was clicked.
+$login_attempt_delay = 5; // seconds
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-    // Now check if both 'username' and 'password' fields are actually set and are not empty
     if (isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['password']) && !empty($_POST['password'])) {
-        // CSRF token check
         if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
             die('Invalid CSRF token');
         }
 
-        $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
-        $password = $_POST['password'];
-
-        $stmt = $con->prepare("SELECT password FROM `customers` WHERE username = ?");
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows === 1) {
-            $row = $result->fetch_assoc();
-            if (password_verify($password, $row['password'])) {
-                $_SESSION['username'] = $username; // Store username in session
-
-                // Success message and redirection link
-                echo "<div class='form' style='text-align: center; font-size: 20px;'>
-                        <span style='font-size: 30px;'>Welcome, <b>" . htmlspecialchars($username) . "</b>!</span>
-                        <h4>Signed In Successfully</h4><br/>
-                        <p class='link'><a href='dashboard.php'>Return To Home</a></p>
-                      </div>";
-                exit; // Stop script execution after successful login
-            } else {
-                // Password does not match
-                echo "<div class='form'>
-                        <h3>Incorrect Username/Password.</h3><br/>
-                        <p class='link'>Click here to <a href='login.php'>Login</a> again.</p>
-                      </div>";
-            }
+        if (isset($_SESSION['last_login_attempt']) && time() - $_SESSION['last_login_attempt'] < $login_attempt_delay) {
+            $remaining_time = $login_attempt_delay - (time() - $_SESSION['last_login_attempt']);
+            echo "<script>alert('Please wait $remaining_time more seconds before trying again.');</script>";
+            // Optionally, you can redirect back to the login page or just do nothing.
+            // echo "<script>window.location = 'login.php';</script>";
+            // exit;
         } else {
-            // Username not found or incorrect login details
-            echo "<div class='form'>
-                    <h3>Incorrect Username/Password.</h3><br/>
-                    <p class='link'>Click here to <a href='login.php'>Login</a> again.</p>
-                  </div>";
-        }
-    } else {
-        // Missing username or password
-        echo "<div class='form'>
-                <h3>Both username and password are required.</h3><br/>
-                <p class='link'>Click here to <a href='login.php'>Login</a> again.</p>
-              </div>";
-    }
-} else {
-    // Display the login form if no POST data is sent
-    displayLoginForm();
-}
+            $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+            $password = $_POST['password'];
 
-function displayLoginForm() {
-    echo '<div class="center">
-            <p>SIGN IN</p>
-          </div>
-          <div class="form">
-              <form method="post" name="login"> 
-                  <input type="hidden" name="csrf_token" value="' . $_SESSION['csrf_token'] . '">
-                  <input type="text" class="login-input" name="username" placeholder="Username" autofocus="true" required />
-                  <input type="password" class="login-input" name="password" placeholder="Password" required />
-                  <input type="submit" value="Login" name="submit" class="login-button"/>
-                  <p class="link"><a href="registration.php">Register Account</a></p>
-              </form>
-          </div>';
+            $stmt = $con->prepare("SELECT password FROM `customers` WHERE username = ?");
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows === 1) {
+                $row = $result->fetch_assoc();
+                if (password_verify($password, $row['password'])) {
+                    $_SESSION['username'] = $username; // Store username in session
+                    echo "<script>window.location = 'dashboard.php';</script>"; // Redirect on successful login
+                    exit;
+                } else {
+                    $_SESSION['last_login_attempt'] = time();
+                    $remaining_time = $login_attempt_delay;
+                }
+            } else {
+                $_SESSION['last_login_attempt'] = time();
+                $remaining_time = $login_attempt_delay;
+            }
+        }
+    }
 }
 ?>
+
+<div class="center">
+    <p>SIGN IN</p>
+</div>
+<div class="form">
+    <form method="post" name="login" id="login-form"> 
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+        <input type="text" class="login-input" name="username" placeholder="Username" autofocus="true" required />
+        <input type="password" class="login-input" name="password" placeholder="Password" required />
+        <input type="submit" value="Login" name="submit" class="login-button" id="submit-button"/>
+        <p class="link"><a href="registration.php">Register Account</a></p>
+    </form>
+    <?php if (isset($remaining_time) && $remaining_time > 0): ?>
+        <p id="error-message">Incorrect Username/Password. Please wait <span id="countdown"><?php echo $remaining_time; ?></span> seconds before trying again.</p>
+    <?php endif; ?>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var countdownElement = document.getElementById("countdown");
+    var submitButton = document.getElementById("submit-button");
+    if (countdownElement) {
+        submitButton.disabled = true;
+        var timeLeft = parseInt(countdownElement.textContent, 10);
+        var timerId = setInterval(function() {
+            timeLeft--;
+            countdownElement.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                var errorMessage = document.getElementById("error-message");
+                if (errorMessage) errorMessage.parentNode.removeChild(errorMessage);
+                submitButton.disabled = false;
+            }
+        }, 1000);
+    }
+});
+</script>
+
 
 
 <style>

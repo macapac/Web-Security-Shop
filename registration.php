@@ -18,7 +18,7 @@ if (!isset($_SESSION['last_registration_attempt'])) {
     $_SESSION['last_registration_attempt'] = time();
 } else {
     $elapsed = time() - $_SESSION['last_registration_attempt'];
-    if ($elapsed < 10) {
+    if ($elapsed < 1) {
         // Prevent registration if the last attempt is within 5 seconds
         die("You are doing that too quickly. Please wait before trying again.");
     }
