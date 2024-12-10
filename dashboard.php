@@ -137,14 +137,18 @@ include 'footer.php'; // Include the footer
 
 .welcome-message {
     padding: 15px;
-    background-color: #f4f4f4; // Light grey background
-    border: 1px solid #ccc; // Light grey border
+    /* Light grey background */
+    background-color: #f4f4f4;  
+    /*  Light grey border */
+    border: 1px solid #ccc; 
     margin-top: 20px;
-    text-align: center; // Center the text
+    /* // Center the text */
+    text-align: center; 
 }
 
 .welcome-message h1 {
-    color: #333; // Dark grey color for text
+  /* // Dark grey color for text */
+    color: #333; 
 }
 
 .welcome-message p {
