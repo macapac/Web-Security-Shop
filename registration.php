@@ -117,16 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ob_end_flush(); // Send output buffer and turn off output buffering
 ?>
 
-
-
-</body>
-</html>
-<?php
-ob_end_flush(); // Send output buffer and turn off output buffering
-?>
-
-
-
 <style>
 .header-logo {
     padding-top: 3px;
