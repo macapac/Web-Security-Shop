@@ -32,9 +32,9 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             $_SESSION['cust_id'] = $row['CustomerID']; // Store customer ID in session
 
             // Success message and redirection link
-            echo "<div class='form'>
-              <span>Welcome, <b>" . htmlspecialchars($_SESSION['username']) . "</b>!</span>
-                    <h3>Signed In Successfully</h3><br/>
+            echo "<div class='form' style='text-align: center; font-size: 20px;>
+              <span style='font-size: 30px;'>Welcome, <b>" . htmlspecialchars($_SESSION['username']) . "</b>!</span>
+                    <h4>Signed In Successfully</h4><br/>
                     <p class='link'><a href='dashboard.php'>Return To Home</a></p>
                   </div>";
             break;

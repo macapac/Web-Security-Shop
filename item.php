@@ -133,11 +133,6 @@ if (isset($_GET['id'])) {
         style="cursor: pointer; font-color:#606060;" />
     </form>
 
-    <!-- Buy it now button -->
-    <div style="cursor: pointer;" class="summary-checkout">
-      <button type="submit" value="Checkout" class="checkout-ctar"><a href="checkout.php"
-          style="text-decoration: none; font-weight: 700;letter-spacing:.08em; color: white;">Buy It Now</a></button>
-    </div>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <!-- Back to shop button -->
