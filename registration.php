@@ -4,11 +4,35 @@ session_start(); // Start the session at the very top
 
 include 'header.php'; // Ensure 'header.php' does not send any output
 
+// Security headers
+header("Content-Security-Policy: default-src 'self'; script-src 'self';");
+header('X-Frame-Options: SAMEORIGIN');
+header('X-Content-Type-Options: nosniff');
+
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-header("Content-Security-Policy: default-src 'self'; script-src 'self';");
+// Implement rate limiting for registration attempts
+if (!isset($_SESSION['last_registration_attempt'])) {
+    $_SESSION['last_registration_attempt'] = time();
+} else {
+    $elapsed = time() - $_SESSION['last_registration_attempt'];
+    if ($elapsed < 5) {
+        // Prevent registration if the last attempt is within 5 seconds
+        die("You are doing that too quickly. Please wait before trying again.");
+    }
+    $_SESSION['last_registration_attempt'] = time();
+}
+
+function isValidPassword($password) {
+    $containsLetter  = preg_match('/[a-zA-Z]/', $password);
+    $containsDigit   = preg_match('/\d/', $password);
+    $containsSpecial = preg_match('/[^a-zA-Z\d]/', $password);
+    $blacklist = ["password123", "iloveyou", "abc123"];
+
+    return strlen($password) >= 12 && $containsLetter && $containsDigit && $containsSpecial && !in_array(strtolower($password), $blacklist);
+}
 
 ?>
 <!DOCTYPE html>
@@ -31,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
-    $password = $_POST['password']; // Password is not output until hashed
+    $password = $_POST['password']; 
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
     $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
     $address = htmlspecialchars($_POST['address'], ENT_QUOTES, 'UTF-8');
@@ -39,28 +63,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $countryregion = htmlspecialchars($_POST['countryregion'], ENT_QUOTES, 'UTF-8');
     $towncity = htmlspecialchars($_POST['towncity'], ENT_QUOTES, 'UTF-8');
 
-    $stmt_check = $con->prepare("SELECT * FROM customers WHERE username = ?");
-    $stmt_check->bind_param("s", $username);
-    $stmt_check->execute();
-    $result_check = $stmt_check->get_result();
-
-    if ($result_check->num_rows > 0){
-        echo "<div class='form'>
-              <h3>Username already exists.</h3><br/>
-              <p class='link'>Click here to <a href='registration.php'>register</a> again.</p>
-              </div>";
+    if (!isValidPassword($password)) {
+        echo "<div class='form'><h3>Password does not meet security requirements.</h3></div>";
     } else {
-        $stmt_insert = $con->prepare("INSERT INTO `customers` (username, password, email, name, address, postcode, countryregion, towncity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-        $stmt_insert->bind_param("ssssssss", $username, $hashed_password, $email, $name, $address, $postcode, $countryregion, $towncity);
+        $stmt_check = $con->prepare("SELECT * FROM customers WHERE username = ?");
+        $stmt_check->bind_param("s", $username);
+        $stmt_check->execute();
+        $result_check = $stmt_check->get_result();
 
-        if ($stmt_insert->execute()) {
+        if ($result_check->num_rows > 0){
             echo "<div class='form'>
-                  <h3>You are registered successfully.</h3><br/>
-                  <p class='link'>Click here to <a href='login.php'>Login</a></p>
+                  <h3>Username already exists.</h3><br/>
+                  <p class='link'>Click here to <a href='registration.php'>register</a> again.</p>
                   </div>";
         } else {
-            die("Error inserting data: " . $stmt_insert->error);
+            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+            $stmt_insert = $con->prepare("INSERT INTO `customers` (username, password, email, name, address, postcode, countryregion, towncity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt_insert->bind_param("ssssssss", $username, $hashed_password, $email, $name, $address, $postcode, $countryregion, $towncity);
+
+            if ($stmt_insert->execute()) {
+                echo "<div class='form'>
+                      <h3>You are registered successfully.</h3><br/>
+                      <p class='link'>Click here to <a href='login.php'>Login</a></p>
+                      </div>";
+            } else {
+                die("Error inserting data: " . $stmt_insert->error);
+            }
         }
     }
 } else {
@@ -76,13 +104,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" class="register-input" name="address" placeholder="Address" required>
         <input type="text" class="register-input" name="postcode" placeholder="Postcode" required>
         <input type="text" class="register-input" name="countryregion" placeholder="Country/Region" required>
-        <input type="text" class="register-input" name="towncity" placeholder="Town/City" required>
+        <input type="text" the class="register-input" name="towncity" placeholder="Town/City" required>
         <input type="submit" name="submit" value="Register" class="register-button">
         <p class="link"><a href="login.php">Login</a></p>
     </form>
     <?php
 }
 ?>
+</body>
+</html>
+<?php
+ob_end_flush(); // Send output buffer and turn off output buffering
+?>
+
+
+
 </body>
 </html>
 <?php
