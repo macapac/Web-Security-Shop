@@ -10,8 +10,3 @@ include 'header.php'; // Include the header
         <label for="amount">Amount to top up:</label>
         <input type="number" id="amount" name="amount" min="1" required>
     </form>
-
-
-<?php
-include 'footer.php'; // Include the footer
-?>

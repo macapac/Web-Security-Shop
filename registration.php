@@ -1,10 +1,15 @@
 <?php
-include 'header.php';
+ob_start(); // Start output buffering
+session_start(); // Start the session at the very top
 
-//csrf token
+include 'header.php'; // Ensure 'header.php' does not send any output
+
 if (!isset($_SESSION['csrf_token'])) {
-  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
+
+header("Content-Security-Policy: default-src 'self'; script-src 'self';");
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,72 +18,79 @@ if (!isset($_SESSION['csrf_token'])) {
     <title>Registration</title>
     <link rel="stylesheet" href="style.css"/>
 </head>
-
+<body>
 <div class="center">
   <p>CREATE ACCOUNT</p>
-</div>	
-<body>
+</div>
 <?php
-	//connect to db using the db script
-    require('db.php');
-    // When web page form submitted, insert values into the database.
-    //if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf_token']) && $_POST['csrf_token'] === $_SESSION['csrf_token']) {
-    if (isset($_REQUEST['username'])) {
-      $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
-      $password = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
-      $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-      $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
-      $address = htmlspecialchars($_POST['address'], ENT_QUOTES, 'UTF-8');
-      $postcode = htmlspecialchars($_POST['postcode'], ENT_QUOTES, 'UTF-8');
-      $countryregion = htmlspecialchars($_POST['countryregion'], ENT_QUOTES, 'UTF-8');
-      $towncity = htmlspecialchars($_POST['towncity'], ENT_QUOTES, 'UTF-8');
-        
-      $stmt_check = $con->prepare("SELECT * FROM customers WHERE username = ?");
-      $stmt_check -> bind_param("s", $username);
-      $stmt_check->execute();
-      $result_check = $stmt_check -> get_result();
+require('db.php');
 
-      if ($result_check->num_rows > 0){
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die('CSRF token validation failed.');
+    }
+
+    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+    $password = $_POST['password']; // Password is not output until hashed
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
+    $address = htmlspecialchars($_POST['address'], ENT_QUOTES, 'UTF-8');
+    $postcode = htmlspecialchars($_POST['postcode'], ENT_QUOTES, 'UTF-8');
+    $countryregion = htmlspecialchars($_POST['countryregion'], ENT_QUOTES, 'UTF-8');
+    $towncity = htmlspecialchars($_POST['towncity'], ENT_QUOTES, 'UTF-8');
+
+    $stmt_check = $con->prepare("SELECT * FROM customers WHERE username = ?");
+    $stmt_check->bind_param("s", $username);
+    $stmt_check->execute();
+    $result_check = $stmt_check->get_result();
+
+    if ($result_check->num_rows > 0){
         echo "<div class='form'>
-                    <h3>Username already exists</h3><br/>
-                    <p class='link'>Click here to <a href='registration.php'>register</a> again.</p>
-                    </div>";
-      } else {
-        $stmt_insert = $con->prepare("INSERT INTO `customers` (username, password, email, name, address, postcode, countryregion, towncity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $hashed_password = hash('sha256', $password);
-        $stmt_insert->bind_param("ssssssss", $username, $hashed_password, $email, $name, $address, $postcode, $countryregion, $towncity);
-        
-        if ($stmt_insert->execute()) {		
-          echo "<div class='form'>
-              <h3>You are registered successfully.</h3><br/>
-              <p class='link'>Click here to <a href='login.php'>Login</a></p>
+              <h3>Username already exists.</h3><br/>
+              <p class='link'>Click here to <a href='registration.php'>register</a> again.</p>
               </div>";
+    } else {
+        $stmt_insert = $con->prepare("INSERT INTO `customers` (username, password, email, name, address, postcode, countryregion, towncity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+        $stmt_insert->bind_param("ssssssss", $username, $hashed_password, $email, $name, $address, $postcode, $countryregion, $towncity);
+
+        if ($stmt_insert->execute()) {
+            echo "<div class='form'>
+                  <h3>You are registered successfully.</h3><br/>
+                  <p class='link'>Click here to <a href='login.php'>Login</a></p>
+                  </div>";
         } else {
             die("Error inserting data: " . $stmt_insert->error);
         }
-      }
-    } else {
-?>
-
-<!-- Registering form -->
-    <form class="form" action="" method="post">
-      <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-      <input type="text" class="register-input" name="username" placeholder="Username" required />
-      <input type="password" class="register-input" name="password" placeholder="Password" required> 
-      <input type="text" class="register-input" name="email" placeholder="Email Adress" required>
-      <input type="text" class="register-input" name="name" placeholder="Full Name" required />
-      <input type="text" class="register-input" name="address" placeholder="Address" required>
-      <input type="text" class="register-input" name="postcode" placeholder="Postcode" required>
-      <input type="text" class="register-input" name="countryregion" placeholder="Country/Region" required>
-      <input type="text" class="register-input" name="towncity" placeholder="Town/City" required>
-      <input type="submit" name="submit" value="Register" class="register-button">
-      <p class="link"><a href="login.php">Login</a></p>
-      <p style="color: white" class="padding2">.</p>
-    </form>
-
-<?php
     }
+} else {
+    // Display registration form
+    ?>
+
+    <form class="form" action="" method="post">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+        <input type="text" class="register-input" name="username" placeholder="Username" required />
+        <input type="password" class="register-input" name="password" placeholder="Password" required> 
+        <input type="text" class="register-input" name="email" placeholder="Email Address" required>
+        <input type="text" class="register-input" name="name" placeholder="Full Name" required />
+        <input type="text" class="register-input" name="address" placeholder="Address" required>
+        <input type="text" class="register-input" name="postcode" placeholder="Postcode" required>
+        <input type="text" class="register-input" name="countryregion" placeholder="Country/Region" required>
+        <input type="text" class="register-input" name="towncity" placeholder="Town/City" required>
+        <input type="submit" name="submit" value="Register" class="register-button">
+        <p class="link"><a href="login.php">Login</a></p>
+    </form>
+    <?php
+}
 ?>
+</body>
+</html>
+<?php
+ob_end_flush(); // Send output buffer and turn off output buffering
+?>
+
+
+
 <style>
 .header-logo {
     padding-top: 3px;
