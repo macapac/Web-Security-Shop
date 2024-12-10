@@ -11,11 +11,7 @@ $username = htmlspecialchars($_SESSION['username']); // Sanitize the output
 
 <!-- Featured items -->
 <div class="w3-container" id="featured items">
-<<<<<<< HEAD
   <h3 class="w3-border-bottom w3-border-light-grey w3-padding-15" style="text-align: center; font-family:Arial, sans-serif;">TFeatured Items</h3>
-=======
-  <h3 class="w3-border-bottom w3-border-light-grey w3-padding-15" style="text-align: center; font-family:Arial, sans-serif;">Test Featured Items</h3>
->>>>>>> 56ee734e3435a1790bc4060ec7e0e8c7acc0f895
 </div>
 <p>&nbsp;</p>
 <?php
