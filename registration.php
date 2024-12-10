@@ -18,20 +18,30 @@ if (!isset($_SESSION['last_registration_attempt'])) {
     $_SESSION['last_registration_attempt'] = time();
 } else {
     $elapsed = time() - $_SESSION['last_registration_attempt'];
-    if ($elapsed < 5) {
+    if ($elapsed < 10) {
         // Prevent registration if the last attempt is within 5 seconds
         die("You are doing that too quickly. Please wait before trying again.");
     }
     $_SESSION['last_registration_attempt'] = time();
 }
 
-function isValidPassword($password) {
-    $containsLetter  = preg_match('/[a-zA-Z]/', $password);
-    $containsDigit   = preg_match('/\d/', $password);
-    $containsSpecial = preg_match('/[^a-zA-Z\d]/', $password);
-    $blacklist = ["password123", "iloveyou", "abc123"];
+function isBlacklisted($password, $blacklist) {
+    foreach ($blacklist as $blacklistedWord) {
+        if (strpos(strtolower($password), strtolower($blacklistedWord)) !== false) {
+            return true;
+        }
+    }
+    return false;
+}
 
-    return strlen($password) >= 12 && $containsLetter && $containsDigit && $containsSpecial && !in_array(strtolower($password), $blacklist);
+function isValidPassword($password) {
+    // Load the blacklist from the file
+    $blacklist = file('blacklist.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $containsLetter = preg_match('/[a-zA-Z]/', $password);
+    $containsDigit = preg_match('/\d/', $password);
+    $containsSpecial = preg_match('/[^a-zA-Z\d]/', $password);
+
+    return strlen($password) >= 12 && $containsLetter && $containsDigit && $containsSpecial && !isBlacklisted($password, $blacklist);
 }
 
 ?>
@@ -55,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
-    $password = $_POST['password']; 
+    $password = $_POST['password'];
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
     $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
     $address = htmlspecialchars($_POST['address'], ENT_QUOTES, 'UTF-8');
@@ -71,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt_check->execute();
         $result_check = $stmt_check->get_result();
 
-        if ($result_check->num_rows > 0){
+        if ($result_check->num_rows > 0) {
             echo "<div class='form'>
                   <h3>Username already exists.</h3><br/>
                   <p class='link'>Click here to <a href='registration.php'>register</a> again.</p>
@@ -94,17 +104,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     // Display registration form
     ?>
-
     <form class="form" action="" method="post">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <input type="text" class="register-input" name="username" placeholder="Username" required />
-        <input type="password" class="register-input" name="password" placeholder="Password" required> 
+        <input type="password" class="register-input" name="password" placeholder="Password" required>
         <input type="text" class="register-input" name="email" placeholder="Email Address" required>
         <input type="text" class="register-input" name="name" placeholder="Full Name" required />
         <input type="text" class="register-input" name="address" placeholder="Address" required>
         <input type="text" class="register-input" name="postcode" placeholder="Postcode" required>
         <input type="text" class="register-input" name="countryregion" placeholder="Country/Region" required>
-        <input type="text" the class="register-input" name="towncity" placeholder="Town/City" required>
+        <input type="text" class="register-input" name="towncity" placeholder="Town/City" required>
         <input type="submit" name="submit" value="Register" class="register-button">
         <p class="link"><a href="login.php">Login</a></p>
     </form>
@@ -116,6 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php
 ob_end_flush(); // Send output buffer and turn off output buffering
 ?>
+
 
 <style>
 .header-logo {
