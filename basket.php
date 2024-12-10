@@ -52,10 +52,10 @@ include 'header.php'; // Include the header
 			$stmt->execute();
 			$result = $stmt->get_result();
 
-			while ($row = $result -> fetch_assoc()) {
+			while ($row = $result->fetch_assoc()) {
 				$price = $row["Price"];
 				$total = ($price * $no_items);
-				?>
+	?>
 				<!-- Displaying items in the basket -->
 				<div class="w3-row-padding">
 					<div class="w3-display-container">
@@ -94,10 +94,9 @@ include 'header.php'; // Include the header
 						</div>
 					</div>
 
-					<?php
+		<?php
 			}
 		}
-
 	}
 
 	//making sure the decimal places for each price variable is the same
@@ -130,7 +129,7 @@ include 'header.php'; // Include the header
 			empty($_SESSION['cart']);
 		}
 	}
-	?>
+		?>
 		<!-- Price box-->
 		<div class="summary">
 			<div class="summary-total-items"><span class="total-items"></span> Items in your Bag
@@ -143,7 +142,14 @@ include 'header.php'; // Include the header
 				<input type="submit" style="cursor: pointer;" class="checkout-cta summary-checkout" name="submitbutton"
 					value="Pay" />
 			</form>
+			<!-- Add the blockchain checkout button -->
+			<form action="checkout.php" method="get">
+				<button type="submit" class="checkout-cta summary-checkout">Proceed to Checkout</button>
+			</form>
+		</div>
+
 
 </main>
 </body>
+
 </html>
