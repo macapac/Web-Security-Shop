@@ -5,7 +5,8 @@ session_start(); // Start the session at the very top
 include 'header.php'; // Ensure 'header.php' does not send any output
 
 // Security headers
-header("Content-Security-Policy: default-src 'self'; script-src 'self';");
+header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';");
+
 header('X-Frame-Options: SAMEORIGIN');
 header('X-Content-Type-Options: nosniff');
 
