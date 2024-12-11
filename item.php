@@ -21,7 +21,7 @@ if (isset($_GET['id'])) {
   <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">  <!-- Link to CSS file -->
+    <link rel="stylesheet" href="style.css">
   </head>
 
   <div class="w3-row-padding w3-padding-16 w3-center" id="food">
