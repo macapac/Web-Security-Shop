@@ -21,31 +21,7 @@ if (isset($_GET['id'])) {
   <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-      /* Styling for the popup close button */
-      .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 16px;
-        font-weight: bold;
-        color: black;
-        cursor: pointer;
-      }
-
-      .mes {
-        position: fixed;
-        background-color: white;
-        border-style: solid;
-        border-color: black;
-        padding: 40px;
-        width: 300px;
-        margin-left: 460px;
-        margin-top: -300px;
-        text-align: center;
-        font-family: sans-serif;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css">  <!-- Link to CSS file -->
   </head>
 
   <div class="w3-row-padding w3-padding-16 w3-center" id="food">
@@ -149,7 +125,32 @@ if (isset($_GET['id'])) {
       }
     </script>
 </body>
-<?php
-include 'footer.php'; // Include the footer
-?>
+
 </html>
+
+
+<style>
+      /* Styling for the popup close button */
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        color: black;
+        cursor: pointer;
+      }
+
+      .mes {
+        position: fixed;
+        background-color: white;
+        border-style: solid;
+        border-color: black;
+        padding: 40px;
+        width: 300px;
+        margin-left: 460px;
+        margin-top: -300px;
+        text-align: center;
+        font-family: sans-serif;
+      }
+    </style>
