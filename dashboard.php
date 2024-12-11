@@ -68,16 +68,12 @@ while ($row = $result->fetch_assoc()) {
     <p>&nbsp;</p>
 <!-- Contact Section -->
 <div style="display: flex; justify-content: center; align-items: center; min-height: 40vh; background-color: #f4f4f4;">
-    <form class="form" action="" method="post" style="width: 100%; max-width: 600px; background-color: #fff; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
-      <div class="w3-container w3-padding-32" id="contact">
-        <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16" style="font-family: sans-serif; text-align: center;">Contact Us</h3>
-        <p style="color: rgba(122, 122, 122, 1); text-align: center;">If you have any queries or if we can be of any further assistance please contact us. We will respond within 24 hours.</p>
-        <input class="w3-input w3-section w3-border" type="text" name="name" placeholder="Name" required style="margin-bottom: 10px; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-        <input class="w3-input w3-section w3-border" type="text" name="email" placeholder="Email" required style="margin-bottom: 10px; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-        <input class="w3-input w3-section w3-border" type="text" name="message" placeholder="Message" required style="margin-bottom: 20px; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-        <input type="submit" name="submit" value="Send" class="send-button" style="width: 100%; background-color: #000; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
-      </div>
-    </form>
+    <a href="shop.php" class="w3-border-bottom w3-border-light-grey w3-padding-16" style="font-family: sans-serif; text-align: center; display: inline-block; color: black; text-decoration: underline;">
+        View Shop
+    </a>
+</div>
+
+
 </div>
 
 
