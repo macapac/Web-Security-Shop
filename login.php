@@ -18,14 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         if (isset($_SESSION['last_login_attempt']) && time() - $_SESSION['last_login_attempt'] < $login_attempt_delay) {
             $remaining_time = $login_attempt_delay - (time() - $_SESSION['last_login_attempt']);
             echo "<script>alert('Please wait $remaining_time more seconds before trying again.');</script>";
-            // Optionally, you can redirect back to the login page or just do nothing.
-            // echo "<script>window.location = 'login.php';</script>";
-            // exit;
         } else {
             $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
             $password = $_POST['password'];
 
-            $stmt = $con->prepare("SELECT password FROM `customers` WHERE username = ?");
+            // Fetch user details from the database
+            $stmt = $con->prepare("SELECT CustomerID, password FROM `customers` WHERE username = ?");
             $stmt->bind_param("s", $username);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -33,7 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             if ($result->num_rows === 1) {
                 $row = $result->fetch_assoc();
                 if (password_verify($password, $row['password'])) {
-                    $_SESSION['username'] = $username; // Store username in session
+                    // Store CustomerID and username in session
+                    $_SESSION['CustomerID'] = $row['CustomerID'];
+                    $_SESSION['username'] = $username;
+
                     echo "<script>window.location = 'dashboard.php';</script>"; // Redirect on successful login
                     exit;
                 } else {
@@ -48,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 }
 ?>
+
 
 <div class="center">
     <p>SIGN IN</p>
@@ -259,4 +261,3 @@ div{
 }
 </style>
 	
-
