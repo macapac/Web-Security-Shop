@@ -136,12 +136,8 @@ include 'header.php'; // Include the header
 				(<?php echo $no_items ?>) </div>
 			<div class="summary-subtotal">
 				<div class="subtotal-title">Total</div>
-				<div class="subtotal-value final-value" id="basket-subtotal">£ <?php echo $ftotal; ?></div>
+				<div class="subtotal-value final-value" id="basket-subtotal">£ <?php echo $total; ?></div>
 			</div>
-			<form method="post" name="purchase">
-				<input type="submit" style="cursor: pointer;" class="checkout-cta summary-checkout" name="submitbutton"
-					value="Pay" />
-			</form>
 			<!-- Add the blockchain checkout button -->
 			<form action="checkout.php" method="get">
 				<button type="submit" class="checkout-cta summary-checkout">Proceed to Checkout</button>
