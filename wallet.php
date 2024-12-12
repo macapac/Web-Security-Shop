@@ -1,5 +1,4 @@
 <?php
-
 // Include your database connection
 require_once 'db.php';
 
@@ -43,17 +42,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $wallet = $result->fetch_assoc();
 
-            // Update the wallet balance
+            // Interact with Python blockchain API to create a transaction
+            $data = [
+                'sender' => 'SYSTEM', // Replace with your system wallet address
+                'recipient' => $wallet['WalletAddress'],
+                'amount' => $topUpAmount
+            ];
+
+            $ch = curl_init('http://localhost:5001/transactions/new'); // Python API endpoint
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            $response = curl_exec($ch);
+            $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            // Check if the transaction was successfully added
+            if ($httpStatus !== 201) {
+                error_log("Failed to add transaction to blockchain: $response");
+                throw new Exception('Blockchain transaction failed.');
+            }
+
+            // Mine a block to add the transaction to the blockchain
+            $ch = curl_init("http://localhost:5001/mine?wallet_address=" . $wallet['WalletAddress']);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $mineResponse = curl_exec($ch);
+            $mineStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            // Check if the block was successfully mined
+            if ($mineStatus !== 200) {
+                error_log("Failed to mine block: $mineResponse");
+                throw new Exception('Mining block failed.');
+            }
+
+            $blockchainResponse = json_decode($mineResponse, true);
+
+            // Update the wallet balance in the database
             $newBalance = $wallet['Balance'] + $topUpAmount;
             $updateQuery = "UPDATE wallets SET Balance = ? WHERE WalletID = ?";
             $updateStmt = $con->prepare($updateQuery);
             $updateStmt->bind_param("di", $newBalance, $wallet['WalletID']);
             $updateStmt->execute();
 
-            // Respond with the updated balance
+            // Respond with success message
             header('Content-Type: application/json');
             echo json_encode([
-                "message" => "Balance updated successfully!",
+                "message" => $blockchainResponse['message'],
                 "new_balance" => $newBalance
             ]);
             exit;
@@ -85,7 +122,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 VALUES (?, ?, ?, ?, 0.00000000)"
             );
             $stmt->bind_param('isss', $customerID, $walletAddress, $publicKey, $privateKey);
-
             $stmt->execute();
 
             // Return wallet details as a JSON response
@@ -126,11 +162,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button id="generateWallet">Generate Wallet</button>
         <div id="walletDetails" style="display: none; margin-top: 20px;">
             <h3>Your Wallet Details</h3>
-            <p><b>Wallet Address:</b>
-            <pre id="walletAddress"></pre>
-            </p>
+            <p><b>Wallet Address:</b> <pre id="walletAddress"></pre></p>
             <p><b>Balance:</b> <span id="walletBalance"></span></p>
-            <p><b>Created At:</b> <span id="walletCreatedAt"></span></p>
         </div>
         <div class="top-up-section">
             <h3>Top-Up Balance</h3>
@@ -141,29 +174,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        // Handle button click for wallet generation
         // Handle wallet generation
         document.getElementById('generateWallet').addEventListener('click', async () => {
             try {
-                // Send POST request to wallet.php for wallet creation
-                const response = await fetch('wallet.php', {
-                    method: 'POST',
-                });
+                const response = await fetch('wallet.php', { method: 'POST' });
                 const data = await response.json();
 
-                if (response.ok) {
-                    if (data.message === 'Wallet created successfully!') {
-                        // Display wallet details
-                        document.getElementById('walletAddress').textContent = data.wallet_address;
-                        document.getElementById('walletBalance').textContent = "0.00"; // Default balance for new wallet
-                        document.getElementById('walletDetails').style.display = 'block';
-                    } else if (data.message === 'Wallet already exists for this customer!') {
-                        alert(data.message);
-                    } else {
-                        alert('Failed to generate wallet.');
-                    }
+                if (response.ok && data.message === 'Wallet created successfully!') {
+                    document.getElementById('walletAddress').textContent = data.wallet_address;
+                    document.getElementById('walletBalance').textContent = "0.00";
+                    document.getElementById('walletDetails').style.display = 'block';
                 } else {
-                    alert(data.error || 'An error occurred while generating the wallet.');
+                    alert(data.message || 'Failed to generate wallet.');
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -181,29 +203,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             try {
-                // Send POST request to wallet.php for top-up
                 const response = await fetch('wallet.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({
-                        top_up_amount: topUpAmount,
-                    }),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ top_up_amount: topUpAmount }),
                 });
 
                 const data = await response.json();
 
-                if (response.ok) {
-                    if (data.message === 'Balance updated successfully!') {
-                        // Update the displayed balance
-                        document.getElementById('walletBalance').textContent = data.new_balance.toFixed(2);
-                        alert(data.message);
-                    } else {
-                        alert(data.error || 'Failed to top up balance.');
-                    }
+                if (response.ok && data.message === 'Balance updated successfully!') {
+                    document.getElementById('walletBalance').textContent = parseFloat(data.new_balance).toFixed(2);
+                    document.getElementById('topUpMessage').textContent = data.message;
+                    document.getElementById('topUpMessage').style.color = 'green';
                 } else {
-                    alert(data.error || 'An error occurred while processing the top-up.');
+                    alert(data.message || 'Failed to top up balance.');
                 }
             } catch (error) {
                 console.error('Error:', error);
