@@ -1,4 +1,5 @@
 //proving SSL, self signed
+openssl s_client -connect web-security-shop.local:443
 ssl openssl s_client -connect web-security-shop.local:443
 https://web-security-shop.local/login.php
 
