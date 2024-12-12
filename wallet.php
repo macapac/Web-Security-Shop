@@ -21,6 +21,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the logged-in user's CustomerID
         $customerID = $_SESSION['CustomerID'];
 
+        if (isset($_POST['generate_wallet'])) {
+            // Check if the customer already has a wallet
+            $query = "SELECT * FROM wallets WHERE CustomerID = ?";
+            $stmt = $con->prepare($query);
+            $stmt->bind_param("i", $customerID);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                throw new Exception('Wallet already exists for this customer.');
+            }
+
+            // Generate RSA key pair
+            $keys = generateKeyPair();
+            $publicKey = $keys['publicKey'];
+            $privateKey = $keys['privateKey'];
+
+            // Derive wallet address (e.g., hash of the public key)
+            $walletAddress = hash('sha256', $publicKey);
+
+            // Insert the wallet into the database
+            $stmt = $con->prepare(
+                "INSERT INTO wallets (CustomerID, WalletAddress, PublicKey, PrivateKey, Balance) 
+                VALUES (?, ?, ?, ?, 0.00000000)"
+            );
+            $stmt->bind_param('isss', $customerID, $walletAddress, $publicKey, $privateKey);
+            $stmt->execute();
+
+            // Respond with wallet creation success
+            header('Content-Type: application/json');
+            echo json_encode(["message" => "Wallet created successfully!"]);
+            exit;
+        }
+
         if (isset($_POST['get_balance'])) {
             // Fetch and return the balance
             $query = "SELECT * FROM wallets WHERE CustomerID = ?";
@@ -42,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Check if the request is for wallet creation or top-up
         if (isset($_POST['top_up_amount'])) {
             // Handle Top-Up functionality
             $topUpAmount = floatval($_POST['top_up_amount']);
@@ -112,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Respond with success message
             header('Content-Type: application/json');
             echo json_encode([
-                "message" => $blockchainResponse['message'],
+                "message" => "Balance updated successfully!",
                 "new_balance" => $newBalance
             ]);
             exit;
@@ -142,7 +175,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
         <h1>Your Wallet</h1>
 
+        <!-- Generate Wallet Button -->
+        <button id="generateWallet">Generate Wallet</button>
+
+        <!-- Check Balance Button -->
         <button id="getBalance">Check Balance</button>
+
         <div id="walletDetails" style="margin-top: 20px;">
             <h3>Wallet Details</h3>
             <p><b>Balance:</b> <span id="walletBalance">--</span></p>
@@ -158,6 +196,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
+        // Handle wallet generation
+        document.getElementById('generateWallet').addEventListener('click', async () => {
+            try {
+                const response = await fetch('wallet.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ generate_wallet: true }),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message || 'Wallet generated successfully!');
+                } else {
+                    alert(data.error || 'Failed to generate wallet.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while generating the wallet.');
+            }
+        });
+
         // Handle balance retrieval
         document.getElementById('getBalance').addEventListener('click', async () => {
             try {
@@ -197,12 +256,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 const data = await response.json();
 
-                if (response.ok && data.message === 'Balance updated successfully!') {
+                if (response.ok) {
                     document.getElementById('walletBalance').textContent = parseFloat(data.new_balance).toFixed(2);
                     document.getElementById('topUpMessage').textContent = data.message;
                     document.getElementById('topUpMessage').style.color = 'green';
                 } else {
-                    alert(data.message || 'Failed to top up balance.');
+                    alert(data.error || 'Failed to top up balance.');
                 }
             } catch (error) {
                 console.error('Error:', error);
