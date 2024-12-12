@@ -1,5 +1,4 @@
 <?php
-
 // Include your database connection
 require_once 'db.php';
 
@@ -43,17 +42,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $wallet = $result->fetch_assoc();
 
-            // Update the wallet balance
+            // Interact with Python blockchain API to create a transaction
+            $data = [
+                'sender' => 'SYSTEM', // Replace with your system wallet address
+                'recipient' => $wallet['WalletAddress'],
+                'amount' => $topUpAmount
+            ];
+
+            $ch = curl_init('http://localhost:5001/transactions/new'); // Python API endpoint
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            $response = curl_exec($ch);
+            $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            // Check if the transaction was successfully added
+            if ($httpStatus !== 201) {
+                error_log("Failed to add transaction to blockchain: $response");
+                throw new Exception('Blockchain transaction failed.');
+            }
+
+            // Mine a block to add the transaction to the blockchain
+            $ch = curl_init("http://localhost:5001/mine?wallet_address=" . $wallet['WalletAddress']);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $mineResponse = curl_exec($ch);
+            $mineStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            // Check if the block was successfully mined
+            if ($mineStatus !== 200) {
+                error_log("Failed to mine block: $mineResponse");
+                throw new Exception('Mining block failed.');
+            }
+
+            $blockchainResponse = json_decode($mineResponse, true);
+
+            // Update the wallet balance in the database
             $newBalance = $wallet['Balance'] + $topUpAmount;
             $updateQuery = "UPDATE wallets SET Balance = ? WHERE WalletID = ?";
             $updateStmt = $con->prepare($updateQuery);
             $updateStmt->bind_param("di", $newBalance, $wallet['WalletID']);
             $updateStmt->execute();
 
-            // Respond with the updated balance
+            // Respond with success message
             header('Content-Type: application/json');
             echo json_encode([
-                "message" => "Balance updated successfully!",
+                "message" => $blockchainResponse['message'],
                 "new_balance" => $newBalance
             ]);
             exit;
@@ -85,7 +122,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 VALUES (?, ?, ?, ?, 0.00000000)"
             );
             $stmt->bind_param('isss', $customerID, $walletAddress, $publicKey, $privateKey);
-
             $stmt->execute();
 
             // Return wallet details as a JSON response
