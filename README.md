@@ -26,4 +26,38 @@ Strong hash algorithm bcrpyt prevents the attack
 Thats why we swtiched from SHA256 to Bcrypt because the passwords will be vulnerable
 
 
-//Sessions
+
+------------------------------------------------------------------------------------------------------
+# Attacks
+
+//SQL INJECT, Sign in without an account, tricks the system to evaluate as 'true'
+' OR '1'='1
+
+
+
+//Cross-Site Scripting XSS attack
+injecting  javascript into a field, since it manipulates the page content through script injection
+
+<script>alert('Prone to XSS attack');</script>
+
+<script>
+    window.location.href = 'http://old-web-shop.local/remote.php';
+</script>
+
+this means it can redirect users to a malicious website
+leads to data theft, account stealing, spreading malware 
+
+
+
+//Cross-Site Request Forgery (CSRF)
+attack.html file
+that automatically submits a request to the website to remove items from the basket
+
+add item 'Hoodie' to basket
+run:
+
+old-web-shop.local/attack.html
+
+hidden in fake adverts/popups
+a hacker can also force the user to make an accidental purchase, log out of account, steal and change account information
+and on weak websites hackers can just redirect the users to an attack page
