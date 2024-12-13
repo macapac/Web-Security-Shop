@@ -12,3 +12,18 @@ Password cannot contain one of the whitelisted common passwords, Etc (Abc123, IL
 
 //blacklist 
 top1000
+
+
+//sql injection prevention
+data being sanitized
+validated through prepare statements
+hashing passwords using bcrypt
+
+
+//Protection Against TMTO/Rainbow Table Attacks
+Salting, adds another string at the end of a password, so the hashed passwords are different
+Strong hash algorithm bcrpyt prevents the attack
+Thats why we swtiched from SHA256 to Bcrypt because the passwords will be vulnerable
+
+
+//Sessions
