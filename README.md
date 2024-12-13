@@ -56,7 +56,7 @@ that automatically submits a request to the website to remove items from the bas
 add item 'Hoodie' to basket
 run:
 
-old-web-shop.local/attack.html
+https://web-security-shop.local/attack.html
 
 hidden in fake adverts/popups
 a hacker can also force the user to make an accidental purchase, log out of account, steal and change account information
